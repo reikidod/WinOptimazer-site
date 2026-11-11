@@ -1,0 +1,68 @@
+name: Website CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "script.js"
+      - "assets/**"
+      - "worker/**"
+      - ".github/workflows/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "script.js"
+      - "assets/**"
+      - "worker/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: website-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate-site:
+    name: Validate website
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check required site files
+        shell: bash
+        run: |
+          set -euo pipefail
+          for file in index.html styles.css script.js assets/winoptimizer-mark.svg; do
+            test -s "$file" || { echo "::error file=$file::Required website file is missing or empty"; exit 1; }
+          done
+
+      - name: Check JavaScript syntax
+        run: node --check script.js
+
+      - name: Check HTML document structure
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -Eiq '<!doctype html>' index.html
+          grep -Eiq '<html[^>]*lang="ru"' index.html
+          grep -Eiq '<meta[^>]+name="viewport"' index.html
+          grep -Eiq '</html>[[:space:]]*$' index.html
+          grep -Eiq 'href="styles\.css"' index.html
+          echo "HTML smoke checks passed."
+
+      - name: Test theme synchronization Worker
+        working-directory: worker
+        run: npm test
