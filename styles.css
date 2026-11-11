@@ -88,7 +88,8 @@ body {
 }
 
 .container {
-  width: min(1480px, calc(100% - 64px));
+  width: calc(100% - clamp(32px, 3vw, 64px));
+  max-width: none;
   margin: 0 auto;
   position: relative;
   z-index: 1;
