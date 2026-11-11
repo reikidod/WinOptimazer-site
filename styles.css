@@ -147,34 +147,46 @@ body {
 .logo:hover { opacity: 0.9; }
 
 .logo-mark {
-  width: 32px;
-  height: 32px;
-  border-radius: 9px;
-  background: linear-gradient(135deg, var(--accent-red-bright), var(--accent-red));
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(192,38,45,0.35);
-  transition: transform 0.3s var(--ease), box-shadow 0.3s;
+  color: transparent;
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: -0.12em;
+  background: linear-gradient(145deg, #FFFFFF 8%, #C9D2E2 58%, #8794AA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: transform 0.3s var(--ease), filter 0.3s;
 }
 
 .logo:hover .logo-mark {
-  transform: scale(1.06) rotate(-3deg);
-  box-shadow: 0 6px 16px rgba(192,38,45,0.45);
+  transform: translateY(-1px) scale(1.06);
+  filter: drop-shadow(0 3px 8px rgba(255,90,95,0.25));
 }
 
 .logo-mark::after {
   content: '';
   position: absolute;
-  inset: 7px;
-  border: 2px solid rgba(255,255,255,0.9);
+  width: 5px;
+  height: 28px;
+  right: 5px;
+  top: 3px;
   border-radius: 4px;
-  border-top: none;
-  border-left: none;
-  transform: rotate(-45deg) translate(1px, -1px);
+  background: linear-gradient(180deg, #FF6B70, #C0262D);
+  transform: skew(-24deg);
+  box-shadow: 0 2px 8px rgba(192,38,45,0.25);
 }
 
-.logo-mark.small { width: 24px; height: 24px; border-radius: 7px; box-shadow: none; }
-.logo-mark.small::after { inset: 5px; }
+.logo-mark.small { width: 26px; height: 26px; font-size: 1.55rem; }
+.logo-mark.small::after { width: 4px; height: 21px; right: 4px; top: 2px; }
 
 .nav { display: flex; gap: 28px; }
 
@@ -473,8 +485,8 @@ body {
 }
 
 .nav-item.active {
-  background: var(--accent-strong);
-  box-shadow: 0 0 0 1px var(--accent), 0 0 12px rgba(138,170,216,0.3);
+  background: linear-gradient(110deg, rgba(192,38,45,0.24), rgba(75,108,163,0.32));
+  box-shadow: inset 3px 0 0 var(--accent-red-bright), 0 0 16px rgba(192,38,45,0.12);
 }
 
 .cards-mock {
