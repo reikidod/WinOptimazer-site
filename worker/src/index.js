@@ -141,7 +141,7 @@ async function handle(request, env) {
     if (!pairing || pairing.expires_at <= Math.floor(Date.now() / 1000)) return fail("Pairing expired", 404);
     if (!pairing.claimed_at || !pairing.token_hash) return json({ status: "pending" }, 202);
     if (!env.TOKEN_ENCRYPTION_KEY) return fail("Token delivery is not configured", 503);
-    const envelope = await env.DB.prepare("UPDATE pairings SET token_ciphertext = NULL WHERE id = ? AND poll_secret_hash = ? AND token_ciphertext IS NOT NULL RETURNING token_ciphertext")
+    const envelope = await env.DB.prepare("DELETE FROM pairings WHERE id = ? AND poll_secret_hash = ? AND token_ciphertext IS NOT NULL RETURNING token_ciphertext")
       .bind(input.pairingId, await hash(input.pollSecret)).first();
     if (!envelope?.token_ciphertext) return fail("Token already delivered; restart pairing if it was lost", 409);
     const deviceToken = await decryptToken(envelope.token_ciphertext, env.TOKEN_ENCRYPTION_KEY);
