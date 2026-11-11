@@ -78,8 +78,8 @@ async function getTheme(env, deviceId) {
 async function handle(request, env) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\/+$/, "") || "/";
-  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(request, env) });
   if (!originAllowed(request, env)) return fail("Origin not allowed", 403);
+  if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(request, env) });
 
   if (request.method === "GET" && path === "/health")
     return json({ status: "ok", service: "winoptimizer-theme-sync" });
