@@ -30,9 +30,11 @@ async function hash(value) {
 function validId(value) {
   return typeof value === "string" && /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value);
 }
-function validTheme(value) {
-  return value && typeof value.id === "string" && THEMES.has(value.id) &&
-    (value.accent == null || (typeof value.accent === "string" && ACCENTS.has(value.accent)));
+function validTheme(value, env) {
+  const themes = new Set((env.THEME_IDS || "dark,light,midnight,emerald").split(",").map(x => x.trim()).filter(Boolean));
+  const accents = new Set((env.ACCENT_IDS || "blue").split(",").map(x => x.trim()).filter(Boolean));
+  return value && typeof value.id === "string" && themes.has(value.id) &&
+    (value.accent == null || (typeof value.accent === "string" && accents.has(value.accent)));
 }
 function originAllowed(request, env) {
   const origin = request.headers.get("Origin");
@@ -124,7 +126,7 @@ async function handle(request, env) {
     if (!pairing) return fail("Invalid or expired pairing code", 404);
 
     const initialTheme = input.theme || { id: "dark", accent: "blue" };
-    if (!validTheme(initialTheme)) return fail("Unsupported theme");
+    if (!validTheme(initialTheme, env)) return fail("Unsupported theme");
     if (!env.TOKEN_ENCRYPTION_KEY || env.TOKEN_ENCRYPTION_KEY.length < 32) return fail("Token encryption is not configured", 503);
     const deviceToken = randomToken();
     const webToken = randomToken();
@@ -171,7 +173,7 @@ async function handle(request, env) {
     }
     let input;
     try { input = await body(request); } catch { return fail("Invalid JSON body"); }
-    if (!validTheme(input)) return fail("Unsupported theme or accent");
+    if (!validTheme(input, env)) return fail("Unsupported theme or accent");
     const now = Math.floor(Date.now() / 1000);
     await env.DB.prepare(
       "UPDATE devices SET theme_id = ?, accent_id = ?, updated_at = ? WHERE id = ? AND revoked_at IS NULL"
