@@ -40,6 +40,16 @@ function originAllowed(request, env) {
   const allowed = (env.ALLOWED_ORIGINS || "").split(",").map(x => x.trim()).filter(Boolean);
   return allowed.includes(origin);
 }
+async function rateLimited(request, env, route, limit, windowSeconds) {
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  const keyHash = await hash(route + ":" + ip);
+  const now = Math.floor(Date.now() / 1000);
+  await env.DB.prepare(
+    "INSERT INTO rate_limits (key_hash, window_start, request_count) VALUES (?, ?, 1) ON CONFLICT(key_hash) DO UPDATE SET request_count = CASE WHEN rate_limits.window_start <= ? THEN 1 ELSE rate_limits.request_count + 1 END, window_start = CASE WHEN rate_limits.window_start <= ? THEN ? ELSE rate_limits.window_start END"
+  ).bind(keyHash, now, now - windowSeconds, now - windowSeconds, now).run();
+  const row = await env.DB.prepare("SELECT request_count FROM rate_limits WHERE key_hash = ?").bind(keyHash).first();
+  return (row?.request_count || 0) > limit;
+}
 function cors(request, env) {
   const origin = request.headers.get("Origin");
   const headers = { "Vary": "Origin", "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
@@ -85,6 +95,7 @@ async function handle(request, env) {
     return json({ status: "ok", service: "winoptimizer-theme-sync" });
 
   if (request.method === "POST" && path === "/v1/pairings") {
+    if (await rateLimited(request, env, "pairing-start", 10, 60)) return fail("Too many pairing requests", 429);
     let input;
     try { input = await body(request); } catch { return fail("Invalid JSON body"); }
     if (!validId(input.deviceId) || typeof input.pollSecret !== "string" ||
@@ -92,6 +103,8 @@ async function handle(request, env) {
     const code = randomCode();
     const pairingId = crypto.randomUUID();
     const now = Math.floor(Date.now() / 1000);
+    await env.DB.prepare("DELETE FROM pairings WHERE expires_at <= ?").bind(now).run();
+    await env.DB.prepare("DELETE FROM rate_limits WHERE window_start < ?").bind(now - 3600).run();
     await env.DB.prepare(
       "INSERT INTO pairings (id, device_id, code_hash, poll_secret_hash, expires_at, created_at) VALUES (?, ?, ?, ?, ?, ?)"
     ).bind(pairingId, input.deviceId, await hash(code), await hash(input.pollSecret), now + CODE_TTL_SECONDS, now).run();
@@ -99,6 +112,7 @@ async function handle(request, env) {
   }
 
   if (request.method === "POST" && path === "/v1/pairings/claim") {
+    if (await rateLimited(request, env, "pairing-claim", 10, 60)) return fail("Too many pairing attempts", 429);
     let input;
     try { input = await body(request); } catch { return fail("Invalid JSON body"); }
     const code = typeof input.code === "string" ? input.code.toUpperCase().replace(/[^A-Z0-9]/g, "") : "";
