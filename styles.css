@@ -638,10 +638,12 @@ body {
 
 .safety-grid {
   display: grid;
+  width: 100%;
+  max-width: 1200px;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   align-items: stretch;
   gap: 20px;
-  margin-bottom: 36px;
+  margin: 0 auto 36px;
 }
 
 .safety-item {
