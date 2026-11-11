@@ -50,7 +50,7 @@ Set the resulting Worker URL in the website's sync client configuration. Do not 
 - `PUT /v1/theme` — bearer-authenticated body: `{ "id": "midnight", "accent": "purple" }`.
 - `POST /v1/device/revoke` — device-token-only revocation.
 
-Supported theme IDs: `dark`, `light`, `midnight`, `emerald`, `ocean`, `sunset`, `graphite`. Supported accent IDs: `blue`, `red`, `purple`, `green`, `cyan`, `orange`, `pink`.
+The initial allowlist contains only the four theme IDs already confirmed in the WPF application: `dark`, `light`, `midnight`, `emerald`. The initial accent allowlist is `blue` until the complete accent identifiers are verified against the application. Extend `THEME_IDS` and `ACCENT_IDS` in `wrangler.toml` only with identifiers that exist in the app.
 
 ## Local checks
 
