@@ -1,9 +1,3 @@
-const THEMES = new Set([
-  "dark", "light", "midnight", "emerald", "ocean", "sunset", "graphite"
-]);
-const ACCENTS = new Set([
-  "blue", "red", "purple", "green", "cyan", "orange", "pink"
-]);
 const CODE_TTL_SECONDS = 600;
 const WEB_SESSION_TTL_SECONDS = 43200;
 
