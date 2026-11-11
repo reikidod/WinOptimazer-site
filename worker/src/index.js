@@ -111,19 +111,22 @@ async function handle(request, env) {
 
     const initialTheme = input.theme || { id: "dark", accent: "blue" };
     if (!validTheme(initialTheme)) return fail("Unsupported theme");
+    if (!env.TOKEN_ENCRYPTION_KEY || env.TOKEN_ENCRYPTION_KEY.length < 32) return fail("Token encryption is not configured", 503);
     const deviceToken = randomToken();
     const webToken = randomToken();
     const webSessionId = crypto.randomUUID();
+    const claimId = crypto.randomUUID();
     const result = await env.DB.batch([
+      env.DB.prepare("UPDATE pairings SET claimed_at = ?, claim_id = ?, token_ciphertext = ? WHERE id = ? AND claimed_at IS NULL")
+        .bind(now, claimId, await encryptToken(deviceToken, env.TOKEN_ENCRYPTION_KEY), pairing.id),
       env.DB.prepare(
-        "INSERT INTO devices (id, token_hash, theme_id, accent_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET token_hash=excluded.token_hash, theme_id=excluded.theme_id, accent_id=excluded.accent_id, revoked_at=NULL, updated_at=excluded.updated_at"
-      ).bind(pairing.device_id, await hash(deviceToken), initialTheme.id, initialTheme.accent || "blue", now, now),
-      env.DB.prepare("UPDATE pairings SET claimed_at = ?, token_ciphertext = ? WHERE id = ? AND claimed_at IS NULL").bind(now, await encryptToken(deviceToken, env.TOKEN_ENCRYPTION_KEY), pairing.id),
+        "INSERT INTO devices (id, token_hash, theme_id, accent_id, created_at, updated_at) SELECT ?, ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM pairings WHERE id = ? AND claim_id = ?) ON CONFLICT(id) DO UPDATE SET token_hash=excluded.token_hash, theme_id=excluded.theme_id, accent_id=excluded.accent_id, revoked_at=NULL, updated_at=excluded.updated_at"
+      ).bind(pairing.device_id, await hash(deviceToken), initialTheme.id, initialTheme.accent || "blue", now, now, pairing.id, claimId),
       env.DB.prepare(
-        "INSERT INTO web_sessions (id, device_id, token_hash, expires_at, created_at) VALUES (?, ?, ?, ?, ?)"
-      ).bind(webSessionId, pairing.device_id, await hash(webToken), now + WEB_SESSION_TTL_SECONDS, now)
+        "INSERT INTO web_sessions (id, device_id, token_hash, expires_at, created_at) SELECT ?, ?, ?, ?, ? WHERE EXISTS (SELECT 1 FROM pairings WHERE id = ? AND claim_id = ?)"
+      ).bind(webSessionId, pairing.device_id, await hash(webToken), now + WEB_SESSION_TTL_SECONDS, now, pairing.id, claimId)
     ]);
-    if (result[1].meta?.changes !== 1) return fail("Pairing code already used", 409);
+    if (result[0].meta?.changes !== 1) return fail("Pairing code already used", 409);
     return json({ linked: true, webToken, expiresIn: WEB_SESSION_TTL_SECONDS });
   }
 
