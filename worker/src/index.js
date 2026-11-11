@@ -118,7 +118,7 @@ async function handle(request, env) {
       env.DB.prepare(
         "INSERT INTO devices (id, token_hash, theme_id, accent_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET token_hash=excluded.token_hash, theme_id=excluded.theme_id, accent_id=excluded.accent_id, revoked_at=NULL, updated_at=excluded.updated_at"
       ).bind(pairing.device_id, await hash(deviceToken), initialTheme.id, initialTheme.accent || "blue", now, now),
-      env.DB.prepare("UPDATE pairings SET claimed_at = ? WHERE id = ? AND claimed_at IS NULL").bind(now, pairing.id),
+      env.DB.prepare("UPDATE pairings SET claimed_at = ?, token_ciphertext = ? WHERE id = ? AND claimed_at IS NULL").bind(now, await encryptToken(deviceToken, env.TOKEN_ENCRYPTION_KEY), pairing.id),
       env.DB.prepare(
         "INSERT INTO web_sessions (id, device_id, token_hash, expires_at, created_at) VALUES (?, ?, ?, ?, ?)"
       ).bind(webSessionId, pairing.device_id, await hash(webToken), now + WEB_SESSION_TTL_SECONDS, now)
@@ -137,12 +137,10 @@ async function handle(request, env) {
     ).bind(input.pairingId, await hash(input.pollSecret)).first();
     if (!pairing || pairing.expires_at <= Math.floor(Date.now() / 1000)) return fail("Pairing expired", 404);
     if (!pairing.claimed_at || !pairing.token_hash) return json({ status: "pending" }, 202);
-    const token = await env.DB.prepare("SELECT token_hash FROM devices WHERE id = ?").bind(pairing.device_id).first();
-    // Device token is returned once by exchanging the polling secret; it is never stored in plaintext.
-    // The pairing row stores an encrypted delivery envelope in deployments that enable TOKEN_ENCRYPTION_KEY.
     if (!env.TOKEN_ENCRYPTION_KEY) return fail("Token delivery is not configured", 503);
-    const envelope = await env.DB.prepare("SELECT token_ciphertext FROM pairings WHERE id = ?").bind(input.pairingId).first();
-    if (!envelope?.token_ciphertext) return fail("Token delivery unavailable; restart pairing", 409);
+    const envelope = await env.DB.prepare("UPDATE pairings SET token_ciphertext = NULL WHERE id = ? AND poll_secret_hash = ? AND token_ciphertext IS NOT NULL RETURNING token_ciphertext")
+      .bind(input.pairingId, await hash(input.pollSecret)).first();
+    if (!envelope?.token_ciphertext) return fail("Token already delivered; restart pairing if it was lost", 409);
     const deviceToken = await decryptToken(envelope.token_ciphertext, env.TOKEN_ENCRYPTION_KEY);
     return json({ status: "linked", deviceToken, theme: await getTheme(env, pairing.device_id) });
   }
@@ -176,6 +174,14 @@ async function handle(request, env) {
   }
 
   return fail("Not found", 404);
+}
+async function encryptToken(token, secret) {
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const keyBytes = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(secret));
+  const key = await crypto.subtle.importKey("raw", keyBytes, "AES-GCM", false, ["encrypt"]);
+  const encrypted = new Uint8Array(await crypto.subtle.encrypt({ name: "AES-GCM", iv }, key, new TextEncoder().encode(token)));
+  const hex = value => Array.from(value, b => b.toString(16).padStart(2, "0")).join("");
+  return hex(iv) + "." + hex(encrypted);
 }
 async function decryptToken(ciphertext, secret) {
   const [ivHex, dataHex] = ciphertext.split(".");
