@@ -3,7 +3,6 @@
   const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('nav');
 
-  // Sticky header shadow
   const onScroll = () => {
     if (!header) return;
     header.classList.toggle('scrolled', window.scrollY > 12);
@@ -11,7 +10,6 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
-  // Mobile menu
   toggle?.addEventListener('click', () => {
     nav?.classList.toggle('open');
     toggle.classList.toggle('open');
@@ -24,7 +22,6 @@
     });
   });
 
-  // Scroll reveal
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
@@ -36,15 +33,14 @@
           }
         });
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.08, rootMargin: '0px 0px -24px 0px' }
     );
     reveals.forEach((el) => io.observe(el));
   } else {
     reveals.forEach((el) => el.classList.add('visible'));
   }
 
-  // Hero appears immediately
-  document.querySelectorAll('.hero .reveal').forEach((el) => {
-    requestAnimationFrame(() => el.classList.add('visible'));
+  document.querySelectorAll('.hero .reveal').forEach((el, i) => {
+    setTimeout(() => el.classList.add('visible'), 80 + i * 120);
   });
 })();
