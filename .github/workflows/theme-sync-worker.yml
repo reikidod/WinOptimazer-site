@@ -1,0 +1,32 @@
+name: Theme Sync Worker
+
+on:
+  push:
+    branches: [beta]
+    paths:
+      - "worker/**"
+      - ".github/workflows/theme-sync-worker.yml"
+  pull_request:
+    branches: [beta]
+    paths:
+      - "worker/**"
+      - ".github/workflows/theme-sync-worker.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: worker
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run Worker tests
+        run: npm test
