@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS pairings (
   expires_at INTEGER NOT NULL,
   created_at INTEGER NOT NULL,
   claimed_at INTEGER,
+  claim_id TEXT,
   token_ciphertext TEXT
 );
 
