@@ -148,6 +148,56 @@
     navSections.forEach((section) => sectionObserver.observe(section));
   }
 
+  // Search and category filters for the knowledge hub.
+  const knowledgeSearch = document.getElementById('knowledgeSearch');
+  const knowledgeCards = [...document.querySelectorAll('.knowledge-card')];
+  const knowledgeFilters = [...document.querySelectorAll('[data-knowledge-filter]')];
+  const knowledgeEmpty = document.getElementById('knowledgeEmpty');
+  let activeKnowledgeFilter = 'all';
+
+  const filterKnowledge = () => {
+    const query = (knowledgeSearch?.value || '').trim().toLocaleLowerCase('ru');
+    let visibleCount = 0;
+    knowledgeCards.forEach((card) => {
+      const categoryMatch = activeKnowledgeFilter === 'all' || card.dataset.category === activeKnowledgeFilter;
+      const searchable = (card.textContent + ' ' + (card.dataset.search || '')).toLocaleLowerCase('ru');
+      const queryMatch = !query || searchable.includes(query);
+      const visible = categoryMatch && queryMatch;
+      card.hidden = !visible;
+      if (visible) visibleCount += 1;
+    });
+    if (knowledgeEmpty) knowledgeEmpty.hidden = visibleCount !== 0;
+  };
+
+  knowledgeSearch?.addEventListener('input', filterKnowledge);
+  knowledgeFilters.forEach((button) => {
+    button.addEventListener('click', () => {
+      activeKnowledgeFilter = button.dataset.knowledgeFilter || 'all';
+      knowledgeFilters.forEach((item) => {
+        const active = item === button;
+        item.classList.toggle('active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+      filterKnowledge();
+    });
+  });
+
+  // Press "/" to focus search, except while typing in a form field.
+  document.addEventListener('keydown', (event) => {
+    const target = event.target;
+    const typing = target instanceof HTMLElement &&
+      (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
+    if (event.key === '/' && !typing && knowledgeSearch) {
+      event.preventDefault();
+      knowledgeSearch.focus();
+    }
+    if (event.key === 'Escape' && document.activeElement === knowledgeSearch) {
+      knowledgeSearch.value = '';
+      filterKnowledge();
+      knowledgeSearch.blur();
+    }
+  });
+
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
