@@ -198,6 +198,75 @@
     }
   });
 
+
+  // Interactive problem-to-feature guide. Recommendations are informational only.
+  const problemRecommendations = {
+    slow: { title:'Начните с лёгкой оптимизации', text:'Сначала проверьте автозагрузку и свободное место, затем изучите безопасные настройки производительности. Не применяйте все твики подряд.', tags:['Лёгкий уровень','Обслуживание','Оптимизация'], href:'features/optimization.html' },
+    games: { title:'Проверьте игровой раздел', text:'Изучите игровые настройки Windows, параметры GPU и доступные инструменты. Сравнивайте производительность до и после изменений в одинаковых условиях.', tags:['Средний уровень','Игры','Измерение результата'], href:'features/gaming.html' },
+    storage: { title:'Начните с обслуживания диска', text:'Проверьте занятое место, временные файлы и приложения, которыми больше не пользуетесь. Перед удалением убедитесь, что данные не нужны.', tags:['Лёгкий уровень','Очистка','Приложения'], href:'features/maintenance.html' },
+    privacy: { title:'Изучите настройки конфиденциальности', text:'Откройте описание каждого параметра и меняйте только те настройки, назначение которых вам понятно. Сохраняйте возможность вернуть исходное состояние.', tags:['Лёгкий / средний','Приватность','Контроль изменений'], href:'features/optimization.html' },
+    unstable: { title:'Не начинайте с агрессивных твиков', text:'Сначала зафиксируйте симптомы, проверьте доступные инструменты обслуживания и подготовьте точку восстановления Windows. Не запускайте автоматические исправления без понимания причины.', tags:['Диагностика','Восстановление','Осторожный подход'], href:'features/maintenance.html' }
+  };
+  const problemButtons = [...document.querySelectorAll('[data-problem]')];
+  const problemResult = document.getElementById('problemResult');
+  problemButtons.forEach((button) => button.addEventListener('click', () => {
+    const key = button.dataset.problem;
+    const item = problemRecommendations[key];
+    if (!item || !problemResult) return;
+    problemButtons.forEach((candidate) => {
+      const active = candidate === button;
+      candidate.classList.toggle('active', active);
+      candidate.setAttribute('aria-pressed', String(active));
+    });
+    problemResult.innerHTML = '<span class="problem-result-label">Рекомендуемый маршрут</span><h3>' +
+      item.title + '</h3><p>' + item.text + '</p><div class="problem-tags">' +
+      item.tags.map((tag) => '<span>' + tag + '</span>').join('') +
+      '</div><a class="btn btn-accent" href="' + item.href + '">Открыть рекомендации <span aria-hidden="true">→</span></a>';
+  }));
+
+  // Searchable FAQ; native details keeps the answers keyboard-accessible.
+  const faqSearch = document.getElementById('faqSearch');
+  const faqItems = [...document.querySelectorAll('.faq-item')];
+  const faqCount = document.getElementById('faqCount');
+  const faqEmpty = document.getElementById('faqEmpty');
+  const filterFaq = () => {
+    const query = (faqSearch?.value || '').trim().toLocaleLowerCase('ru');
+    let visible = 0;
+    faqItems.forEach((item) => {
+      const match = (item.textContent + ' ' + (item.dataset.search || '')).toLocaleLowerCase('ru').includes(query);
+      item.hidden = !match;
+      if (match) visible++;
+    });
+    if (faqCount) faqCount.textContent = visible + ' ' + (visible === 1 ? 'вопрос' : visible > 1 && visible < 5 ? 'вопроса' : 'вопросов');
+    if (faqEmpty) faqEmpty.hidden = visible !== 0;
+  };
+  faqSearch?.addEventListener('input', filterFaq);
+
+  // Release history comes from the public GitHub Releases API.
+  const loadReleaseHistory = async () => {
+    const root = document.getElementById('releaseList');
+    if (!root) return;
+    try {
+      const response = await fetch('https://api.github.com/repos/reikidod/WinOptimazer/releases?per_page=6', {
+        headers: { Accept: 'application/vnd.github+json' }, cache: 'no-store'
+      });
+      if (!response.ok) throw new Error('GitHub API: ' + response.status);
+      const releases = await response.json();
+      if (!Array.isArray(releases) || !releases.length) throw new Error('Опубликованные релизы пока не найдены');
+      const escapeText = (value) => String(value || '').replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+      root.innerHTML = releases.map((release) => {
+        const date = release.published_at ? new Intl.DateTimeFormat('ru-RU', { day:'numeric', month:'long', year:'numeric' }).format(new Date(release.published_at)) : 'Дата не указана';
+        const notes = String(release.body || 'Описание этого обновления пока не опубликовано.').split(/\r?\n/).map(line => line.replace(/^\s*[-*#>]+\s*/, '').trim()).filter(Boolean).slice(0, 2).join(' · ');
+        const kind = release.prerelease ? 'Beta' : release.draft ? 'Черновик' : 'Stable';
+        return '<article class="release-item"><div class="release-marker" aria-hidden="true"></div><div class="release-content"><div class="release-meta"><span class="release-version">' + escapeText(release.tag_name || release.name || 'Релиз') + '</span><span class="release-kind ' + (release.prerelease ? 'beta' : 'stable') + '">' + kind + '</span><time datetime="' + escapeText(release.published_at || '') + '">' + date + '</time></div><h3>' + escapeText(release.name || release.tag_name || 'Обновление WinOptimizer') + '</h3><p>' + escapeText(notes) + '</p><a href="' + escapeText(release.html_url) + '" target="_blank" rel="noopener">Открыть описание обновления <span aria-hidden="true">→</span></a></div></article>';
+      }).join('');
+    } catch (error) {
+      root.innerHTML = '<p class="release-error">Не удалось загрузить список релизов. <a href="https://github.com/reikidod/WinOptimazer/releases" target="_blank" rel="noopener">Открыть историю обновлений на GitHub</a>.</p>';
+      console.warn('Не удалось загрузить историю релизов WinOptimizer:', error);
+    }
+  };
+  loadReleaseHistory();
+
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
