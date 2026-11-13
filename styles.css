@@ -1150,3 +1150,102 @@ section[id] { scroll-margin-top: 82px; }
 @media (prefers-reduced-motion: reduce) {
   .skip-link { transition: none; }
 }
+
+
+/* Knowledge hub: searchable, scannable paths through the product */
+.knowledge-section { padding-top: 72px; }
+.knowledge-tools {
+  display: grid;
+  gap: 16px;
+  margin: 0 0 22px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(32,34,37,.76);
+}
+.knowledge-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-window);
+  color: var(--text-secondary);
+}
+.knowledge-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(138,170,216,.12); }
+.knowledge-search > span { font-size: 1.5rem; line-height: 1; }
+.knowledge-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+}
+.knowledge-search input::placeholder { color: var(--text-dim); }
+.knowledge-search kbd {
+  padding: 2px 7px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--text-dim);
+  font: 600 .75rem var(--font);
+}
+.knowledge-filters { display: flex; flex-wrap: wrap; gap: 8px; }
+.knowledge-filter {
+  padding: 8px 13px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: 500 .84rem var(--font);
+  cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+.knowledge-filter:hover { border-color: var(--border-hover); color: var(--text-primary); }
+.knowledge-filter.active {
+  border-color: rgba(138,170,216,.55);
+  background: rgba(138,170,216,.13);
+  color: var(--text-primary);
+}
+.knowledge-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+.knowledge-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 224px;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: linear-gradient(145deg, rgba(42,44,49,.96), rgba(32,34,37,.96));
+  color: inherit;
+  text-decoration: none;
+  transition: transform .25s var(--ease), border-color .25s, background .25s;
+}
+.knowledge-card:hover { transform: translateY(-3px); border-color: var(--border-hover); background: var(--bg-card-hover); }
+.knowledge-card:focus-visible, .knowledge-filter:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.knowledge-card[hidden] { display: none; }
+.knowledge-card-top { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+.knowledge-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; background: rgba(138,170,216,.12); font-size: 1.2rem; }
+.knowledge-tag { color: var(--accent); font-size: .75rem; font-weight: 650; letter-spacing: .02em; }
+.knowledge-card h3 { margin-bottom: 8px; font-size: 1.04rem; line-height: 1.35; }
+.knowledge-card p { margin-bottom: 18px; color: var(--text-secondary); font-size: .9rem; line-height: 1.55; }
+.knowledge-link { display: flex; justify-content: space-between; align-items: center; margin-top: auto; color: var(--accent); font-size: .85rem; font-weight: 600; }
+.knowledge-empty { margin: 12px 0; padding: 22px; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--text-secondary); text-align: center; }
+.knowledge-footer { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 20px; padding: 17px 20px; border: 1px solid var(--border); border-radius: 12px; color: var(--text-secondary); font-size: .9rem; }
+.knowledge-footer a { color: var(--accent); text-decoration: none; font-weight: 600; }
+.knowledge-footer a:hover { text-decoration: underline; }
+@media (max-width: 900px) { .knowledge-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } }
+@media (max-width: 600px) {
+  .knowledge-grid { grid-template-columns: 1fr; }
+  .knowledge-card { min-height: 0; }
+  .knowledge-footer { align-items: flex-start; flex-direction: column; }
+  .knowledge-tools { padding: 13px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .knowledge-card, .knowledge-filter { transition: none; }
+}
