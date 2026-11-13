@@ -3,28 +3,57 @@
   const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('nav');
 
-  // Resolve the newest published installer asset (including beta releases).
+  // Resolve the newest published installer, including prereleases.
   const resolveLatestInstaller = async () => {
     const links = document.querySelectorAll('[data-download-latest]');
     if (!links.length) return;
-    const fallback = 'https://github.com/reikidod/WinOptimazer/releases/latest/download/WinOptimizer-Setup.exe';
+
+    const releasesUrl = 'https://github.com/reikidod/WinOptimazer/releases';
+    const channelLabels = document.querySelectorAll('[data-release-channel]');
+    const versionLabels = document.querySelectorAll('[data-release-version]');
+    const dateLabels = document.querySelectorAll('[data-release-date]');
+
+    // Keep a useful fallback if the GitHub API is unavailable or rate-limited.
+    links.forEach((link) => { link.href = releasesUrl; });
+
     try {
-      const response = await fetch('https://api.github.com/repos/reikidod/WinOptimazer/releases?per_page=1', {
+      const response = await fetch('https://api.github.com/repos/reikidod/WinOptimazer/releases?per_page=10', {
         headers: { Accept: 'application/vnd.github+json' },
         cache: 'no-store'
       });
       if (!response.ok) throw new Error(`GitHub Releases API: ${response.status}`);
+
       const releases = await response.json();
-      const installer = releases.flatMap((release) => release.assets || [])
-        .find((asset) => asset.name === 'WinOptimizer-Setup.exe' && asset.state === 'uploaded');
-      const url = installer?.browser_download_url || fallback;
+      const release = releases.find((item) =>
+        !item.draft && (item.assets || []).some((asset) =>
+          asset.name === 'WinOptimizer-Setup.exe' && asset.state === 'uploaded'
+        )
+      );
+      if (!release) throw new Error('No published installer release found');
+
+      const installer = release.assets.find((asset) =>
+        asset.name === 'WinOptimizer-Setup.exe' && asset.state === 'uploaded'
+      );
       links.forEach((link) => {
-        link.href = url;
+        link.href = installer.browser_download_url;
         link.removeAttribute('target');
         link.removeAttribute('rel');
       });
+
+      const channel = release.prerelease ? 'Beta' : 'Stable';
+      const version = release.tag_name || release.name || 'последняя версия';
+      const date = release.published_at
+        ? new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
+            .format(new Date(release.published_at))
+        : '';
+
+      channelLabels.forEach((label) => { label.textContent = channel; });
+      versionLabels.forEach((label) => { label.textContent = version; });
+      dateLabels.forEach((label) => { label.textContent = date ? ` · ${date}` : ''; });
     } catch (error) {
-      links.forEach((link) => { link.href = fallback; });
+      channelLabels.forEach((label) => { label.textContent = 'Релизы'; });
+      versionLabels.forEach((label) => { label.textContent = 'Выберите версию на GitHub'; });
+      dateLabels.forEach((label) => { label.textContent = ''; });
       console.warn('Не удалось определить последний установщик WinOptimizer:', error);
     }
   };
