@@ -60,7 +60,8 @@ jobs:
           grep -Eiq '<html[^>]*lang="ru"' index.html
           grep -Eiq '<meta[^>]+name="viewport"' index.html
           grep -Eiq '</html>[[:space:]]*$' index.html
-          grep -Eiq 'href="styles\.css"' index.html
+          # Allow cache-busting query strings and fragments on the stylesheet URL.
+          grep -Eiq 'href="styles\.css([?#][^"]*)?"' index.html
           echo "HTML smoke checks passed."
 
       - name: Test theme synchronization Worker
