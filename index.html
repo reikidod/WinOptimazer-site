@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>WinOptimizer — единый центр управления Windows</title>
-  <meta name="description" content="Бесплатный открытый инструмент для настройки и обслуживания Windows 10/11. Мониторинг CPU, RAM, GPU, сети, физических дисков и температур, твики с откатом и игровые инструменты." />
+  <meta name="description" content="Бесплатный открытый инструмент для настройки, обслуживания и оптимизации Windows 10/11. Твики с откатом, игровой режим, установка программ, очистка системы." />
   <meta name="theme-color" content="#1B1C1F" />
   <meta property="og:title" content="WinOptimizer — центр управления Windows" />
   <meta property="og:description" content="Твики с откатом · игровой режим · установка программ · очистка системы" />
@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261114-4" />
+  <link rel="stylesheet" href="styles.css?v=20261114-6" />
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>
@@ -26,21 +26,28 @@
         <span class="logo-mark" aria-hidden="true">W</span>
         <span class="logo-text">WinOptimizer</span>
       </a>
-      <nav class="nav" id="nav">
+      <nav class="nav" id="nav" aria-label="Основная навигация">
+        <a href="#top" class="active" aria-current="location">Обзор</a>
         <a href="#features">Возможности</a>
+        <a href="#level-comparison">Сравнение</a>
+        <a href="#getting-started">Как начать</a>
+        <a href="#knowledge">База знаний</a>
+        <a href="#roadmap">Развитие</a>
+        <a href="#help-tools">Подбор</a>
+        <a href="#faq">FAQ</a>
+        <a href="#release-history">История</a>
         <a href="#safety">Безопасность</a>
-        <a href="#download">Скачать</a>
-        <a href="https://github.com/reikidod/WinOptimazer" target="_blank" rel="noopener">GitHub</a>
       </nav>
-      <a class="btn btn-accent header-cta" href="https://github.com/reikidod/WinOptimazer/releases" data-download-latest target="_blank" rel="noopener">Скачать</a>
-      <button class="menu-toggle" aria-label="Меню" id="menuToggle" type="button">
+      <a class="btn btn-accent header-cta" href="https://github.com/reikidod/WinOptimazer/releases/latest/download/WinOptimizer-Setup.exe" data-download-latest target="_blank" rel="noopener">Скачать</a>
+      <button class="menu-toggle" aria-label="Открыть меню" aria-controls="nav" aria-expanded="false" id="menuToggle" type="button">
         <span></span><span></span><span></span>
       </button>
     </div>
   </header>
 
-  <main>
-    <section class="hero">
+  <a class="skip-link" href="#main-content">Перейти к содержимому</a>
+  <main id="main-content">
+    <section class="hero" id="top">
       <div class="container hero-inner">
         <div class="hero-content reveal">
           <div class="badge-row">
@@ -53,16 +60,11 @@
             управления <span class="accent">Windows</span>
           </h1>
           <p class="hero-lead">
-            WinOptimizer — бесплатный центр управления Windows 10/11. Настраивайте систему,
-            следите за нагрузкой процессора, видеокарты, памяти и дисков, обслуживайте Windows
-            и устанавливайте нужные программы в одном месте.
-          </p>
-          <p class="hero-benefit">
-            Меньше отдельных утилит, больше понятного контроля: каждая настройка сопровождается
-            пояснением, а для поддерживаемых изменений предусмотрен откат.
+            Настройка, обслуживание и оптимизация Windows 10/11 в одном приложении.
+            Твики с откатом, игровой режим, установка программ и очистка системы — без лишней сложности.
           </p>
           <div class="hero-actions">
-            <a class="btn btn-accent btn-lg" href="https://github.com/reikidod/WinOptimazer/releases" data-download-latest target="_blank" rel="noopener">
+            <a class="btn btn-accent btn-lg" href="https://github.com/reikidod/WinOptimazer/releases/latest/download/WinOptimizer-Setup.exe" data-download-latest target="_blank" rel="noopener">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M12 3v12m0 0l-4-4m4 4l4-4M5 19h14"/></svg>
               Скачать последнюю версию
             </a>
@@ -118,6 +120,161 @@
       </div>
     </section>
 
+
+    <section id="getting-started" class="section getting-started">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Быстрый старт</p>
+          <h2 class="section-title">Знакомство с WinOptimizer</h2>
+          <p class="section-sub">Простая инструкция для тех, кто впервые открыл программу. Разберёмся, что она умеет и с чего лучше начать.</p>
+        </div>
+
+        <div class="intro-panel reveal">
+          <div class="intro-mark" aria-hidden="true">W</div>
+          <div>
+            <h3>Что такое WinOptimizer?</h3>
+            <p>Это единый центр управления Windows 10 и 11. Вместо нескольких отдельных утилит вы получаете инструменты для настройки системы, обслуживания компьютера, управления программами и подготовки Windows к играм.</p>
+          </div>
+        </div>
+
+        <div class="guide-grid">
+          <article class="guide-card reveal">
+            <span class="guide-icon" aria-hidden="true">⚙️</span>
+            <h3>Настроить Windows</h3>
+            <p>Изменять системные параметры и твики, управлять настройками производительности, интерфейса и конфиденциальности. Перед применением изучайте описание каждого изменения.</p>
+          </article>
+          <article class="guide-card reveal delay-1">
+            <span class="guide-icon" aria-hidden="true">🧹</span>
+            <h3>Обслуживать компьютер</h3>
+            <p>Удалять ненужные приложения, очищать временные файлы, проверять автозагрузку и просматривать сведения о комплектующих и накопителях.</p>
+          </article>
+          <article class="guide-card reveal delay-2">
+            <span class="guide-icon" aria-hidden="true">🎮</span>
+            <h3>Подготовить ПК к играм</h3>
+            <p>Использовать игровые настройки Windows и доступные инструменты программы, чтобы удобнее управлять параметрами игрового окружения.</p>
+          </article>
+        </div>
+
+        <div class="guide-steps">
+          <div class="guide-steps-head">
+            <p class="section-eyebrow">Первые шаги</p>
+            <h3>Как начать пользоваться</h3>
+            <p>Не нужно менять всё сразу — двигайтесь постепенно.</p>
+          </div>
+          <ol class="steps-list">
+            <li><span class="step-number">01</span><div><strong>Скачайте и установите программу</strong><p>Используйте кнопку «Скачать» на этом сайте. Запускайте установщик, загруженный из официального источника.</p></div></li>
+            <li><span class="step-number">02</span><div><strong>Откройте нужный раздел</strong><p>Выберите оптимизацию, приложения, игровой раздел, обслуживание или информацию о компьютере — в зависимости от вашей задачи.</p></div></li>
+            <li><span class="step-number">03</span><div><strong>Начните с простых действий</strong><p>Сначала ознакомьтесь с рекомендациями и описаниями. Для оптимизации выбирайте подходящий уровень, а сложные твики настраивайте вручную.</p></div></li>
+            <li><span class="step-number">04</span><div><strong>Проверяйте результат</strong><p>Читайте предупреждения перед применением изменений. Если для действия доступен откат, используйте его для возврата сохранённых исходных параметров.</p></div></li>
+          </ol>
+        </div>
+
+        <div class="levels-panel reveal">
+          <div class="levels-copy">
+            <p class="section-eyebrow">Уровни оптимизации</p>
+            <h3>Выберите комфортную глубину настройки</h3>
+            <p>Если в вашей версии доступны профили оптимизации, выбирайте их по ситуации. Более агрессивные настройки затрагивают больше параметров Windows и требуют внимательного отношения.</p>
+          </div>
+          <div class="level-list">
+            <div class="level-item"><span class="level-dot level-light"></span><div><strong>Лёгкая</strong><p>Базовые и наиболее осторожные изменения для повседневного использования.</p></div></div>
+            <div class="level-item"><span class="level-dot level-medium"></span><div><strong>Средняя</strong><p>Дополнительные настройки для тех, кто хочет немного глубже настроить систему.</p></div></div>
+            <div class="level-item"><span class="level-dot level-high"></span><div><strong>Агрессивная</strong><p>Более глубокие изменения. Перед применением обязательно изучите их последствия.</p></div></div>
+          </div>
+        </div>
+
+        <p class="guide-warning reveal"><span aria-hidden="true">ⓘ</span><span><strong>Совет новичку:</strong> перед масштабными изменениями создайте точку восстановления Windows. Не отключайте службы и не применяйте твики, назначение которых вам непонятно. WinOptimizer помогает управлять настройками, но не гарантирует одинаковый прирост производительности на каждом ПК.</span></p>
+      </div>
+    </section>
+
+
+    <section id="knowledge" class="section knowledge-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Центр знаний</p>
+          <h2 class="section-title">Найдите ответ и следующий шаг</h2>
+          <p class="section-sub">Короткие маршруты по возможностям WinOptimizer — от первого запуска до безопасной настройки Windows.</p>
+        </div>
+
+        <div class="knowledge-tools reveal">
+          <label class="knowledge-search" for="knowledgeSearch">
+            <span aria-hidden="true">⌕</span>
+            <input id="knowledgeSearch" type="search" placeholder="Поиск по темам и инструкциям…" autocomplete="off" />
+            <kbd>/</kbd>
+          </label>
+          <div class="knowledge-filters" role="group" aria-label="Фильтр материалов">
+            <button class="knowledge-filter active" type="button" data-knowledge-filter="all" aria-pressed="true">Все темы</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="start" aria-pressed="false">Начало работы</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="tuning" aria-pressed="false">Оптимизация</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="safety" aria-pressed="false">Безопасность</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="gaming" aria-pressed="false">Игры</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="updates" aria-pressed="false">Обновления</button>
+          </div>
+        </div>
+
+        <div class="knowledge-grid" id="knowledgeGrid" aria-live="polite">
+          <a class="knowledge-card reveal" href="#getting-started" data-category="start" data-search="первый запуск установка начало работы инструкция скачать новичок">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🚀</span><span class="knowledge-tag">Начало работы</span></span>
+            <h3>С чего начать?</h3>
+            <p>Первые шаги: установка, выбор раздела и знакомство с основными инструментами.</p>
+            <span class="knowledge-link">Открыть инструкцию <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-1" href="#level-comparison" data-category="tuning" data-search="уровни оптимизации легкая средняя агрессивная профили твики производительность">
+            <span class="knowledge-card-top"><span class="knowledge-icon">⚙️</span><span class="knowledge-tag">Оптимизация</span></span>
+            <h3>Как выбрать уровень оптимизации</h3>
+            <p>Чем отличаются лёгкий, средний и агрессивный подходы к настройке системы.</p>
+            <span class="knowledge-link">Разобраться <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-2" href="#safety" data-category="safety" data-search="безопасность точка восстановления откат резервная копия изменения твики">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🛡️</span><span class="knowledge-tag">Безопасность</span></span>
+            <h3>Как безопасно менять Windows</h3>
+            <p>Что проверить перед применением твиков и как подготовиться к возможному откату.</p>
+            <span class="knowledge-link">Изучить рекомендации <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal" href="#features" data-category="gaming" data-search="игровой режим игры steam epic gog xbox gpu графика">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🎮</span><span class="knowledge-tag">Игры</span></span>
+            <h3>Подготовка ПК к играм</h3>
+            <p>Посмотрите, какие игровые инструменты и настройки собраны в приложении.</p>
+            <span class="knowledge-link">Посмотреть возможности <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-1" href="#roadmap" data-category="updates" data-search="обновления бета дорожная карта разработка этапы задачи планы">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🧭</span><span class="knowledge-tag">Обновления</span></span>
+            <h3>Что появится дальше?</h3>
+            <p>Следите за этапами разработки и актуальным статусом задач Beta.</p>
+            <span class="knowledge-link">Открыть дорожную карту <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-2" href="#download" data-category="start" data-search="скачать установить системные требования windows 10 11 net runtime версия">
+            <span class="knowledge-card-top"><span class="knowledge-icon">📥</span><span class="knowledge-tag">Начало работы</span></span>
+            <h3>Скачать и установить</h3>
+            <p>Где получить актуальную сборку и какие системные требования проверить.</p>
+            <span class="knowledge-link">К загрузкам <span aria-hidden="true">→</span></span>
+          </a>
+        </div>
+        <p class="knowledge-empty" id="knowledgeEmpty" hidden>По этому запросу ничего не найдено. Попробуйте изменить формулировку или выбрать другую тему.</p>
+        <div class="knowledge-footer reveal">
+          <span>Не нашли нужную информацию?</span>
+          <a href="https://github.com/reikidod/WinOptimazer/issues" target="_blank" rel="noopener">Задать вопрос или предложить тему ↗</a>
+        </div>
+      </div>
+    </section>
+
+    <section id="roadmap" class="section roadmap-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Разработка WinOptimizer</p>
+          <h2 class="section-title">Дорожная карта Beta</h2>
+          <p class="section-sub">Следите за развитием программы: выполненные задачи, текущая работа и планы следующих обновлений.</p>
+        </div>
+        <div class="roadmap-source reveal">
+          <div class="roadmap-source-indicator"><span class="roadmap-live-dot"></span><span>Источник: рабочая ветка <strong>beta</strong></span></div>
+          <a href="https://github.com/reikidod/WinOptimazer/blob/beta/docs/ROADMAP-0.7.md" target="_blank" rel="noopener">Открыть исходную дорожную карту ↗</a>
+        </div>
+        <div id="roadmap-content" class="roadmap-content" aria-live="polite">
+          <div class="roadmap-loading"><span class="roadmap-spinner" aria-hidden="true"></span><span>Загружаем актуальный план разработки…</span></div>
+        </div>
+        <p class="roadmap-footnote">Данные загружаются из <code>docs/ROADMAP-0.7.md</code> репозитория WinOptimizer. После обновления файла в ветке beta сайт автоматически покажет новые задачи и статусы при следующем открытии.</p>
+      </div>
+    </section>
+
     <section id="features" class="section features">
       <div class="container">
         <div class="section-head reveal">
@@ -128,45 +285,145 @@
         <div class="features-grid">
           <article class="feature-card reveal">
             <div class="feature-icon-wrap"><span class="feature-icon">⚙️</span></div>
-            <h3>Гибкая оптимизация</h3>
-            <p>Настраивайте службы и параметры Windows через каталог твиков с объяснениями, оценкой пользы и предупреждениями. Поддерживаемые изменения можно отменить.</p>
-          </article>
+            <h3>Оптимизация и настройка Windows</h3>
+            <p>Твики реестра и служб, параметры интерфейса и персонализации с описаниями и предупреждениями. Поддерживаемые изменения можно отменить.</p>
+          <a class="feature-detail-link" href="features/optimization.html">Подробнее о функции <span aria-hidden="true">→</span></a></article>
           <article class="feature-card reveal delay-1">
-            <div class="feature-icon-wrap"><span class="feature-icon">📊</span></div>
-            <h3>Центр производительности</h3>
-            <p>Следите за CPU, RAM, GPU, сетью, физическими дисками и доступными датчиками температуры — не ограничиваясь одним системным накопителем.</p>
-          </article>
-          <article class="feature-card reveal delay-2">
             <div class="feature-icon-wrap"><span class="feature-icon">🎮</span></div>
-            <h3>Инструменты для игр</h3>
-            <p>Подготовка Windows к игровым сессиям, обнаружение популярных игровых платформ, настройки GPU и поддержка OptiScaler.</p>
-          </article>
-          <article class="feature-card reveal delay-3">
-            <div class="feature-icon-wrap"><span class="feature-icon">🧹</span></div>
-            <h3>Обслуживание Windows</h3>
-            <p>Очищайте временные файлы и кэши, управляйте автозагрузкой, просматривайте состояние системы и используйте инструменты восстановления.</p>
-          </article>
-          <article class="feature-card reveal">
-            <div class="feature-icon-wrap"><span class="feature-icon">📦</span></div>
-            <h3>Установка приложений</h3>
-            <p>Устанавливайте популярные программы, компоненты VC++ и DirectX, а также приложения из каталога Microsoft Store через winget.</p>
-          </article>
-          <article class="feature-card reveal delay-1">
-            <div class="feature-icon-wrap"><span class="feature-icon">🎨</span></div>
-            <h3>Персонализация</h3>
-            <p>Подбирайте оформление приложения: используйте тёмные темы, цветовые акценты и собственный фон.</p>
-          </article>
+            <h3>Игровой режим</h3>
+            <p>Подготовка Windows к играм, обнаружение Steam, Epic, GOG и Xbox, настройки GPU и поддержка OptiScaler.</p>
+          <a class="feature-detail-link" href="features/gaming.html">Подробнее о функции <span aria-hidden="true">→</span></a></article>
           <article class="feature-card reveal delay-2">
-            <div class="feature-icon-wrap"><span class="feature-icon">🛡️</span></div>
-            <h3>Безопасность изменений</h3>
-            <p>Просматривайте предупреждения перед настройкой, сохраняйте исходные параметры поддерживаемых твиков и возвращайте прежние значения.</p>
-          </article>
-          <article class="feature-card reveal delay-3">
+            <div class="feature-icon-wrap"><span class="feature-icon">📦</span></div>
+            <h3>Установка программ</h3>
+            <p>Популярные приложения, Microsoft Store, VC++ и DirectX, дополнительные утилиты. Установка через доступные системные инструменты.</p>
+          <a class="feature-detail-link" href="features/applications.html">Подробнее о функции <span aria-hidden="true">→</span></a></article>
+          <article class="feature-card reveal delay-1">
+            <div class="feature-icon-wrap"><span class="feature-icon">🧹</span></div>
+            <h3>Очистка и обслуживание</h3>
+            <p>Временные файлы, кэши, автозагрузка и удаление ненужных приложений.</p>
+          <a class="feature-detail-link" href="features/maintenance.html">Подробнее о функции <span aria-hidden="true">→</span></a></article>
+          <article class="feature-card reveal delay-2">
             <div class="feature-icon-wrap"><span class="feature-icon">💻</span></div>
-            <h3>Информация и контроль ПК</h3>
-            <p>Изучайте характеристики компьютера, историю операций и системные задачи Windows в режиме просмотра.</p>
-          </article>
+            <h3>Информация о ПК</h3>
+            <p>Процессор, видеокарта, ОЗУ, накопители и общее состояние системы.</p>
+          <a class="feature-detail-link" href="features/pc-info.html">Подробнее о функции <span aria-hidden="true">→</span></a></article>
+          <article class="feature-card reveal delay-1">
+            <div class="feature-icon-wrap"><span class="feature-icon">↩️</span></div>
+            <h3>Контроль изменений</h3>
+            <p>Отмена поддерживаемых твиков и возврат сохранённых исходных параметров.</p>
+          <a class="feature-detail-link" href="features/rollback.html">Подробнее о функции <span aria-hidden="true">→</span></a></article>
         </div>
+      </div>
+    </section>
+
+
+    <section id="help-tools" class="section helper-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Персональный подбор</p>
+          <h2 class="section-title">С чего начать именно вам?</h2>
+          <p class="section-sub">Выберите основную проблему — сайт предложит подходящий маршрут по возможностям WinOptimizer. Это справочная рекомендация, а не автоматическое изменение Windows.</p>
+        </div>
+        <div class="problem-picker reveal">
+          <div class="problem-options" role="group" aria-label="Выберите проблему">
+            <button class="problem-option active" type="button" data-problem="slow" aria-pressed="true"><span>🐢</span><strong>Компьютер работает медленно</strong><small>Нагрузка, автозагрузка, общая отзывчивость</small></button>
+            <button class="problem-option" type="button" data-problem="games" aria-pressed="false"><span>🎮</span><strong>Проблемы в играх</strong><small>Игровые параметры и фоновые процессы</small></button>
+            <button class="problem-option" type="button" data-problem="storage" aria-pressed="false"><span>💾</span><strong>Мало места на диске</strong><small>Временные файлы и установленные приложения</small></button>
+            <button class="problem-option" type="button" data-problem="privacy" aria-pressed="false"><span>🔒</span><strong>Хочу настроить приватность</strong><small>Параметры конфиденциальности Windows</small></button>
+            <button class="problem-option" type="button" data-problem="unstable" aria-pressed="false"><span>🧰</span><strong>Windows работает нестабильно</strong><small>Проверки, осторожные изменения и восстановление</small></button>
+          </div>
+          <div class="problem-result" id="problemResult" aria-live="polite">
+            <span class="problem-result-label">Рекомендуемый маршрут</span>
+            <h3>Начните с лёгкой оптимизации</h3>
+            <p>Сначала проверьте автозагрузку и свободное место, затем изучите безопасные настройки производительности. Не применяйте все твики подряд.</p>
+            <div class="problem-tags"><span>Лёгкий уровень</span><span>Обслуживание</span><span>Оптимизация</span></div>
+            <a class="btn btn-accent" href="features/optimization.html">Открыть рекомендации <span aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="level-comparison" class="section level-comparison">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Понятный выбор</p>
+          <h2 class="section-title">Сравнение уровней оптимизации</h2>
+          <p class="section-sub">Чем глубже уровень, тем больше параметров может затрагиваться. Состав конкретных твиков зависит от текущей версии приложения.</p>
+        </div>
+        <div class="comparison-wrap reveal" role="region" aria-label="Сравнение уровней оптимизации" tabindex="0">
+          <table class="comparison-table">
+            <thead><tr><th scope="col">Критерий</th><th scope="col">Лёгкая</th><th scope="col">Средняя</th><th scope="col">Агрессивная</th></tr></thead>
+            <tbody>
+              <tr><th scope="row">Для кого</th><td>Большинству пользователей</td><td>Тем, кто понимает назначение настроек</td><td>Опытным пользователям</td></tr>
+              <tr><th scope="row">Глубина изменений</th><td>Базовая</td><td>Расширенная</td><td>Максимальная из доступных</td></tr>
+              <tr><th scope="row">Потенциальный риск</th><td><span class="risk low">Ниже</span></td><td><span class="risk medium">Умеренный</span></td><td><span class="risk high">Повышенный</span></td></tr>
+              <tr><th scope="row">Перед применением</th><td>Ознакомиться с описанием</td><td>Проверить каждую настройку</td><td>Создать точку восстановления и изучить последствия</td></tr>
+              <tr><th scope="row">Рекомендация</th><td>Начинайте отсюда</td><td>Выбирайте по задаче</td><td>Только осознанно и вручную</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="comparison-note">Уровень не гарантирует конкретный прирост FPS или скорости. Результат зависит от оборудования, состояния Windows и выбранных параметров.</p>
+      </div>
+    </section>
+
+    <section id="faq" class="section faq-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Помощь</p>
+          <h2 class="section-title">Частые вопросы</h2>
+          <p class="section-sub">Найдите ответ по ключевому слову или раскройте интересующий вопрос.</p>
+        </div>
+        <label class="faq-search reveal" for="faqSearch"><span aria-hidden="true">⌕</span><input id="faqSearch" type="search" placeholder="Например: откат, игры, безопасность…" autocomplete="off"><span class="faq-count" id="faqCount">8 вопросов</span></label>
+        <div class="faq-list reveal" id="faqList">
+          <details class="faq-item" data-search="безопасность твики изменения windows риск">
+            <summary>Безопасно ли использовать WinOptimizer?</summary>
+            <p>Программа предназначена для управления настройками Windows. Перед применением изучайте описание твика и предупреждения. Любые системные изменения могут иметь последствия, поэтому для крупных изменений рекомендуется создать точку восстановления.</p>
+          </details>
+          <details class="faq-item" data-search="откат вернуть исходные параметры восстановить твик">
+            <summary>Можно ли вернуть настройки обратно?</summary>
+            <p>Для поддерживаемых твиков приложение предусматривает сохранение исходных значений и откат. Возможность возврата зависит от конкретной настройки; не все действия Windows можно автоматически отменить.</p>
+          </details>
+          <details class="faq-item" data-search="уровень легкая средняя агрессивная оптимизация">
+            <summary>Какой уровень оптимизации выбрать?</summary>
+            <p>Если вы не уверены, начните с лёгкого уровня. Средний выбирайте под конкретную задачу после изучения параметров. Агрессивный предназначен для опытных пользователей и требует особенно внимательной проверки.</p>
+          </details>
+          <details class="faq-item" data-search="fps игры игровой режим производительность">
+            <summary>Увеличит ли программа FPS в играх?</summary>
+            <p>Гарантировать прирост FPS нельзя. Эффект зависит от конфигурации ПК, игры, драйверов и исходного состояния системы. WinOptimizer помогает управлять доступными настройками, но не заменяет измерение производительности.</p>
+          </details>
+          <details class="faq-item" data-search="windows 10 11 поддержка система требования">
+            <summary>Какие версии Windows поддерживаются?</summary>
+            <p>Сайт указывает поддержку Windows 10 и Windows 11 x64. Для работы приложения требуется .NET 8 Desktop Runtime; отдельным операциям могут понадобиться права администратора.</p>
+          </details>
+          <details class="faq-item" data-search="телеметрия приватность данные компьютер">
+            <summary>Отправляет ли приложение данные о компьютере?</summary>
+            <p>В описании проекта заявлено отсутствие телеметрии. Сведения о системе не должны отправляться на сторонние серверы самим приложением.</p>
+          </details>
+          <details class="faq-item" data-search="установка программы приложения каталог store">
+            <summary>Можно ли устанавливать и удалять программы?</summary>
+            <p>В приложении предусмотрены инструменты управления установленными программами и установки поддерживаемых приложений, включая переход к Microsoft Store. Доступность конкретного пакета зависит от каталога и источника.</p>
+          </details>
+          <details class="faq-item" data-search="обновление релиз beta стабильная версия скачать">
+            <summary>Где посмотреть новые версии?</summary>
+            <p>Все опубликованные версии доступны в GitHub Releases. Стабильные выпуски предназначены для обычного использования, Beta — для проверки новых возможностей.</p>
+          </details>
+        </div>
+        <p class="faq-empty" id="faqEmpty" hidden>По этому запросу ничего не найдено. Попробуйте другое слово.</p>
+      </div>
+    </section>
+
+    <section id="release-history" class="section release-history">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Развитие проекта</p>
+          <h2 class="section-title">История изменений</h2>
+          <p class="section-sub">Последние опубликованные обновления приложения с переходом к полному описанию каждого релиза.</p>
+        </div>
+        <div class="release-list" id="releaseList" aria-live="polite">
+          <div class="release-loading"><span class="roadmap-spinner" aria-hidden="true"></span> Загружаем историю релизов…</div>
+        </div>
+        <div class="release-footer"><a class="btn btn-ghost" href="https://github.com/reikidod/WinOptimazer/releases" target="_blank" rel="noopener">Все обновления на GitHub <span aria-hidden="true">→</span></a></div>
       </div>
     </section>
 
@@ -205,39 +462,32 @@
 
     <section id="download" class="section download">
       <div class="container download-inner">
-        <div class="download-panel reveal">
-          <div class="download-copy">
-            <p class="section-eyebrow">Начните пользоваться</p>
-            <h2 class="section-title">Ваш Windows.<br /><span class="accent">Ваши правила.</span></h2>
-            <p class="section-sub">WinOptimizer объединяет настройку, обслуживание и контроль системы в одном месте. Выберите подходящий канал и начните работу.</p>
-            <div class="download-trust">
-              <span><span class="trust-dot"></span> Бесплатно и с открытым кодом</span>
-              <span><span class="trust-dot"></span> Windows 10 / 11 · x64</span>
-            </div>
-          </div>
-          <div class="download-options">
-            <a class="download-card primary" href="https://github.com/reikidod/WinOptimazer/releases" data-download-latest target="_blank" rel="noopener">
-              <span class="download-card-top"><span class="dl-label" data-release-channel>Релизы</span><span class="dl-icon" aria-hidden="true">↓</span></span>
-              <span class="dl-title">Скачать WinOptimizer</span>
-              <span class="dl-desc">Актуальная опубликованная версия · <span data-release-version aria-live="polite">загрузка версии…</span><span data-release-date></span> · установщик</span>
-              <span class="dl-action">Скачать приложение <span aria-hidden="true">↗</span></span>
-            </a>
-            <a class="download-card beta" href="https://github.com/reikidod/WinOptimazer/releases" target="_blank" rel="noopener">
-              <span class="download-card-top"><span class="dl-label">Beta / Releases</span><span class="dl-icon" aria-hidden="true">↗</span></span>
-              <span class="dl-title">Другие версии</span>
-              <span class="dl-desc">История выпусков, бета-сборки и заметки обновлений</span>
-              <span class="dl-action">Открыть релизы <span aria-hidden="true">↗</span></span>
-            </a>
-          </div>
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Старт</p>
+          <h2 class="section-title">Скачать WinOptimizer</h2>
+          <p class="section-sub">Стабильная версия для повседневного использования. Бета — для тестирования новых функций.</p>
         </div>
-        <div class="requirements-strip reveal">
-          <div class="requirements-heading">
-            <span class="requirements-icon" aria-hidden="true">⌘</span>
-            <div><strong>Перед установкой</strong><span>Коротко о системных требованиях</span></div>
-          </div>
-          <div class="requirement"><span>Операционная система</span><strong>Windows 10 / 11, 64-bit</strong></div>
-          <div class="requirement"><span>Среда выполнения</span><strong><a href="https://dotnet.microsoft.com/download/dotnet/8.0" target="_blank" rel="noopener">.NET 8 Desktop Runtime ↗</a></strong></div>
-          <div class="requirement"><span>Права администратора</span><strong>Для системных изменений</strong></div>
+        <div class="download-cards">
+          <a class="download-card primary reveal" href="https://github.com/reikidod/WinOptimazer/releases/latest/download/WinOptimizer-Setup.exe" data-download-latest target="_blank" rel="noopener">
+            <span class="dl-label">Stable</span>
+            <span class="dl-title">Последняя версия</span>
+            <span class="dl-desc">WinOptimizer-Setup.exe · прямое скачивание</span>
+            <span class="dl-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="download-card reveal delay-1" href="https://github.com/reikidod/WinOptimazer/releases" target="_blank" rel="noopener">
+            <span class="dl-label">Все версии</span>
+            <span class="dl-title">История релизов</span>
+            <span class="dl-desc">Stable и Beta</span>
+            <span class="dl-arrow" aria-hidden="true">→</span>
+          </a>
+        </div>
+        <div class="req-table reveal">
+          <h3>Системные требования</h3>
+          <ul>
+            <li><strong>ОС</strong> — Windows 10 или 11, 64-bit</li>
+            <li><strong>Runtime</strong> — <a href="https://dotnet.microsoft.com/download/dotnet/8.0" target="_blank" rel="noopener">.NET 8 Desktop Runtime</a></li>
+            <li><strong>Права</strong> — администратор для HKLM и системных служб</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -245,40 +495,20 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <div class="footer-main">
-        <div class="footer-about">
-          <a href="#" class="footer-brand">
-            <span class="logo-mark small" aria-hidden="true">W</span>
-            <span>WinOptimizer</span>
-          </a>
-          <p>Понятный центр управления Windows — от повседневного обслуживания до тонкой настройки системы.</p>
-          <span class="footer-license">Open Source <span>·</span> MIT License</span>
-        </div>
-        <div class="footer-column">
-          <h3>Навигация</h3>
-          <a href="#features">Возможности</a>
-          <a href="#safety">Безопасность</a>
-          <a href="#download">Скачать</a>
-        </div>
-        <div class="footer-column">
-          <h3>Проект</h3>
-          <a href="https://github.com/reikidod/WinOptimazer" target="_blank" rel="noopener">GitHub ↗</a>
-          <a href="https://github.com/reikidod/WinOptimazer/releases" target="_blank" rel="noopener">Релизы ↗</a>
-          <a href="https://github.com/reikidod/WinOptimazer/issues" target="_blank" rel="noopener">Сообщить о проблеме ↗</a>
-        </div>
-        <div class="footer-column">
-          <h3>Документы</h3>
-          <a href="https://github.com/reikidod/WinOptimazer/blob/main/LICENSE" target="_blank" rel="noopener">Лицензия MIT ↗</a>
-          <a href="https://github.com/reikidod/WinOptimazer/blob/main/SECURITY.md" target="_blank" rel="noopener">Безопасность ↗</a>
-        </div>
+      <div class="footer-brand">
+        <span class="logo-mark small"></span>
+        <span>WinOptimizer</span>
       </div>
-      <div class="footer-bottom">
-        <span>© <span id="currentYear">2026</span> WinOptimizer. Открытый проект.</span>
-        <a href="#header">Наверх ↑</a>
+      <div class="footer-links">
+        <a href="https://github.com/reikidod/WinOptimazer" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/reikidod/WinOptimazer/issues" target="_blank" rel="noopener">Issues</a>
+        <a href="https://github.com/reikidod/WinOptimazer/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+        <a href="https://github.com/reikidod/WinOptimazer/blob/main/SECURITY.md" target="_blank" rel="noopener">Security</a>
       </div>
+      <p class="footer-copy">Открытый проект для удобного управления Windows</p>
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20261114-6"></script>
 </body>
 </html>
