@@ -96,17 +96,57 @@
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
 
+  const closeMenu = ({ restoreFocus = false } = {}) => {
+    nav?.classList.remove('open');
+    toggle?.classList.remove('open');
+    toggle?.setAttribute('aria-expanded', 'false');
+    toggle?.setAttribute('aria-label', 'Открыть меню');
+    if (restoreFocus) toggle?.focus();
+  };
+
   toggle?.addEventListener('click', () => {
-    nav?.classList.toggle('open');
-    toggle.classList.toggle('open');
+    const isOpen = nav?.classList.toggle('open') ?? false;
+    toggle.classList.toggle('open', isOpen);
+    toggle.setAttribute('aria-expanded', String(isOpen));
+    toggle.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
   });
 
-  nav?.querySelectorAll('a').forEach((a) => {
-    a.addEventListener('click', () => {
-      nav.classList.remove('open');
-      toggle?.classList.remove('open');
-    });
+  nav?.querySelectorAll('a[href^="#"]').forEach((link) => {
+    link.addEventListener('click', () => closeMenu());
   });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && nav?.classList.contains('open')) closeMenu({ restoreFocus: true });
+  });
+
+  document.addEventListener('click', (event) => {
+    if (nav?.classList.contains('open') && !header?.contains(event.target)) closeMenu();
+  });
+
+  // Keep the active navigation item in sync with the section currently being read.
+  const navLinks = [...(nav?.querySelectorAll('a[href^="#"]') || [])];
+  const navSections = navLinks
+    .map((link) => document.querySelector(link.getAttribute('href')))
+    .filter(Boolean);
+
+  const setActiveLink = (sectionId) => {
+    navLinks.forEach((link) => {
+      const active = link.getAttribute('href') === '#' + sectionId;
+      link.classList.toggle('active', active);
+      if (active) link.setAttribute('aria-current', 'location');
+      else link.removeAttribute('aria-current');
+    });
+  };
+
+  if ('IntersectionObserver' in window && navSections.length) {
+    const sectionObserver = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter((entry) => entry.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible.length) setActiveLink(visible[0].target.id);
+    }, { rootMargin: '-22% 0px -65% 0px', threshold: 0 });
+    navSections.forEach((section) => sectionObserver.observe(section));
+  }
 
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
