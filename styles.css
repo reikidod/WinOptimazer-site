@@ -1027,3 +1027,40 @@ body {
   .footer-about { grid-column: 1 / -1; grid-row: auto; }
   .footer-bottom { align-items: flex-start; flex-direction: column; }
 }
+
+/* WinOptimizer Fluent refresh — centered layout and calm blue accent */
+:root {
+  --accent: #8AAAD8;
+  --accent-strong: #4B6CA3;
+  --accent-red: #C0262D;
+  --bg-window: #1B1C1F;
+  --bg-sidebar: #202225;
+  --bg-card: #25282E;
+  --bg-card-hover: #2D323B;
+  --border: #383D46;
+  --border-hover: #647B9F;
+}
+.container { width: min(1440px, calc(100% - 48px)); max-width: 1440px; margin-inline: auto; }
+.bg-glow-1 { background: radial-gradient(circle, rgba(75,108,163,0.14) 0%, transparent 70%); animation: none; }
+.bg-glow-2 { background: radial-gradient(circle, rgba(138,170,216,0.10) 0%, transparent 70%); animation: none; }
+.logo-mark::after { background: linear-gradient(180deg, #AFC8EA, #4B6CA3); box-shadow: 0 2px 8px rgba(75,108,163,0.28); }
+.logo:hover .logo-mark { filter: drop-shadow(0 3px 8px rgba(138,170,216,0.25)); }
+.nav-item.active { background: rgba(75,108,163,0.22); box-shadow: inset 3px 0 0 var(--accent), 0 0 16px rgba(75,108,163,0.10); }
+.hero h1 .accent { background: linear-gradient(120deg, #8AAAD8 0%, #D5E3F7 50%, #8AAAD8 100%); background-size: 200% auto; }
+.section { padding-block: clamp(64px, 7vw, 92px); }
+.features-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.feature-card { min-width: 0; padding: 24px; background: linear-gradient(155deg, rgba(255,255,255,0.025), transparent 55%), var(--bg-card); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+.feature-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.20); }
+.safety-grid { max-width: 1200px; }
+.download-panel { max-width: 1200px; margin-inline: auto; }
+.footer-inner, .footer-main, .footer-bottom { max-width: 1440px; margin-inline: auto; }
+@media (max-width: 1100px) { .features-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 720px) {
+  .container { width: calc(100% - 32px); }
+  .section { padding-block: 58px; }
+  .features-grid { grid-template-columns: 1fr; gap: 14px; }
+  .feature-card { padding: 22px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
