@@ -1134,3 +1134,21 @@ body {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* Clear product explanation in the hero */
+.hero-benefit {
+  max-width: 540px;
+  margin: -12px 0 26px;
+  padding-left: 14px;
+  border-left: 2px solid var(--accent);
+  color: var(--text-dim);
+  font-size: 0.94rem;
+  line-height: 1.65;
+}
+
+@media (max-width: 720px) {
+  .hero-benefit {
+    margin-top: -8px;
+    font-size: 0.9rem;
+  }
+}
