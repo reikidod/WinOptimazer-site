@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=20261114-5" />
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>
@@ -30,6 +30,7 @@
         <a href="#top" class="active" aria-current="location">Обзор</a>
         <a href="#features">Возможности</a>
         <a href="#getting-started">Как начать</a>
+        <a href="#knowledge">База знаний</a>
         <a href="#roadmap">Развитие</a>
         <a href="#safety">Безопасность</a>
       </nav>
@@ -182,6 +183,76 @@
     </section>
 
 
+    <section id="knowledge" class="section knowledge-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Центр знаний</p>
+          <h2 class="section-title">Найдите ответ и следующий шаг</h2>
+          <p class="section-sub">Короткие маршруты по возможностям WinOptimizer — от первого запуска до безопасной настройки Windows.</p>
+        </div>
+
+        <div class="knowledge-tools reveal">
+          <label class="knowledge-search" for="knowledgeSearch">
+            <span aria-hidden="true">⌕</span>
+            <input id="knowledgeSearch" type="search" placeholder="Поиск по темам и инструкциям…" autocomplete="off" />
+            <kbd>/</kbd>
+          </label>
+          <div class="knowledge-filters" role="group" aria-label="Фильтр материалов">
+            <button class="knowledge-filter active" type="button" data-knowledge-filter="all" aria-pressed="true">Все темы</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="start" aria-pressed="false">Начало работы</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="tuning" aria-pressed="false">Оптимизация</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="safety" aria-pressed="false">Безопасность</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="gaming" aria-pressed="false">Игры</button>
+            <button class="knowledge-filter" type="button" data-knowledge-filter="updates" aria-pressed="false">Обновления</button>
+          </div>
+        </div>
+
+        <div class="knowledge-grid" id="knowledgeGrid" aria-live="polite">
+          <a class="knowledge-card reveal" href="#getting-started" data-category="start" data-search="первый запуск установка начало работы инструкция скачать новичок">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🚀</span><span class="knowledge-tag">Начало работы</span></span>
+            <h3>С чего начать?</h3>
+            <p>Первые шаги: установка, выбор раздела и знакомство с основными инструментами.</p>
+            <span class="knowledge-link">Открыть инструкцию <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-1" href="#getting-started" data-category="tuning" data-search="уровни оптимизации легкая средняя агрессивная профили твики производительность">
+            <span class="knowledge-card-top"><span class="knowledge-icon">⚙️</span><span class="knowledge-tag">Оптимизация</span></span>
+            <h3>Как выбрать уровень оптимизации</h3>
+            <p>Чем отличаются лёгкий, средний и агрессивный подходы к настройке системы.</p>
+            <span class="knowledge-link">Разобраться <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-2" href="#safety" data-category="safety" data-search="безопасность точка восстановления откат резервная копия изменения твики">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🛡️</span><span class="knowledge-tag">Безопасность</span></span>
+            <h3>Как безопасно менять Windows</h3>
+            <p>Что проверить перед применением твиков и как подготовиться к возможному откату.</p>
+            <span class="knowledge-link">Изучить рекомендации <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal" href="#features" data-category="gaming" data-search="игровой режим игры steam epic gog xbox gpu графика">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🎮</span><span class="knowledge-tag">Игры</span></span>
+            <h3>Подготовка ПК к играм</h3>
+            <p>Посмотрите, какие игровые инструменты и настройки собраны в приложении.</p>
+            <span class="knowledge-link">Посмотреть возможности <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-1" href="#roadmap" data-category="updates" data-search="обновления бета дорожная карта разработка этапы задачи планы">
+            <span class="knowledge-card-top"><span class="knowledge-icon">🧭</span><span class="knowledge-tag">Обновления</span></span>
+            <h3>Что появится дальше?</h3>
+            <p>Следите за этапами разработки и актуальным статусом задач Beta.</p>
+            <span class="knowledge-link">Открыть дорожную карту <span aria-hidden="true">→</span></span>
+          </a>
+          <a class="knowledge-card reveal delay-2" href="#download" data-category="start" data-search="скачать установить системные требования windows 10 11 net runtime версия">
+            <span class="knowledge-card-top"><span class="knowledge-icon">📥</span><span class="knowledge-tag">Начало работы</span></span>
+            <h3>Скачать и установить</h3>
+            <p>Где получить актуальную сборку и какие системные требования проверить.</p>
+            <span class="knowledge-link">К загрузкам <span aria-hidden="true">→</span></span>
+          </a>
+        </div>
+        <p class="knowledge-empty" id="knowledgeEmpty" hidden>По этому запросу ничего не найдено. Попробуйте изменить формулировку или выбрать другую тему.</p>
+        <div class="knowledge-footer reveal">
+          <span>Не нашли нужную информацию?</span>
+          <a href="https://github.com/reikidod/WinOptimazer/issues" target="_blank" rel="noopener">Задать вопрос или предложить тему ↗</a>
+        </div>
+      </div>
+    </section>
+
     <section id="roadmap" class="section roadmap-section">
       <div class="container">
         <div class="section-head reveal">
@@ -324,6 +395,6 @@
     </div>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=20261114-5"></script>
 </body>
 </html>
