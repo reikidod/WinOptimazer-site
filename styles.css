@@ -1064,3 +1064,49 @@ body {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/* Immediate visual refresh — v2026.11.14 */
+:root {
+  --accent: #8AAAD8 !important;
+  --accent-strong: #4B6CA3 !important;
+  --bg-window: #1B1C1F !important;
+  --bg-sidebar: #202225 !important;
+  --bg-card: #25282E !important;
+  --bg-card-hover: #2D323B !important;
+  --border: #383D46 !important;
+  --border-hover: #647B9F !important;
+}
+.container {
+  width: min(1440px, calc(100% - 48px)) !important;
+  max-width: 1440px !important;
+  margin-inline: auto !important;
+}
+.bg-glow-1 { background: radial-gradient(circle, rgba(75,108,163,.14), transparent 70%) !important; animation: none !important; }
+.bg-glow-2 { background: radial-gradient(circle, rgba(138,170,216,.10), transparent 70%) !important; animation: none !important; }
+.logo-mark::after { background: linear-gradient(180deg, #AFC8EA, #4B6CA3) !important; box-shadow: 0 2px 8px rgba(75,108,163,.28) !important; }
+.logo:hover .logo-mark { filter: drop-shadow(0 3px 8px rgba(138,170,216,.25)) !important; }
+.features-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  gap: 16px !important;
+}
+.feature-card {
+  min-width: 0 !important;
+  padding: 24px !important;
+  background: linear-gradient(155deg, rgba(255,255,255,.025), transparent 55%), #25282E !important;
+  border-color: #383D46 !important;
+}
+.feature-card:hover { transform: translateY(-3px) !important; }
+.safety-grid, .download-panel { max-width: 1200px !important; margin-inline: auto !important; }
+.footer-main, .footer-bottom { max-width: 1440px !important; margin-inline: auto !important; }
+@media (max-width: 1100px) {
+  .features-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width: 720px) {
+  .container { width: calc(100% - 32px) !important; }
+  .features-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
+  .feature-card { padding: 22px !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
