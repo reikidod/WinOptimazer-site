@@ -2,7 +2,7 @@ name: Theme Sync Worker
 
 on:
   push:
-    branches: [beta]
+    branches: [main, beta]
     paths:
       - "worker/**"
       - ".github/workflows/theme-sync-worker.yml"
