@@ -7,6 +7,7 @@ on:
       - "index.html"
       - "styles.css"
       - "script.js"
+      - "site-stats.js"
       - "assets/**"
       - "worker/**"
       - ".github/workflows/**"
@@ -45,12 +46,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          for file in index.html styles.css script.js assets/winoptimizer-mark.svg; do
+          for file in index.html styles.css script.js site-stats.js assets/winoptimizer-mark.svg; do
             test -s "$file" || { echo "::error file=$file::Required website file is missing or empty"; exit 1; }
           done
 
       - name: Check JavaScript syntax
-        run: node --check script.js
+        run: |
+          node --check script.js
+          node --check site-stats.js
 
       - name: Check HTML document structure
         shell: bash
@@ -64,6 +67,6 @@ jobs:
           grep -Eiq 'href="styles\.css([?#][^"]*)?"' index.html
           echo "HTML smoke checks passed."
 
-      - name: Test theme synchronization Worker
+      - name: Test site statistics Worker
         working-directory: worker
         run: npm test
