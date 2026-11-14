@@ -1,13 +1,13 @@
-name: Theme Sync Worker
+name: Site Statistics Worker
 
 on:
   push:
-    branches: [main, beta]
+    branches: [main]
     paths:
       - "worker/**"
       - ".github/workflows/theme-sync-worker.yml"
   pull_request:
-    branches: [beta]
+    branches: [main]
     paths:
       - "worker/**"
       - ".github/workflows/theme-sync-worker.yml"
