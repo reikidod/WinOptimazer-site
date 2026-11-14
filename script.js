@@ -267,6 +267,227 @@
   };
   loadReleaseHistory();
 
+  // Personal website theme and device synchronization (Cloudflare Worker + D1).
+  const THEME_SYNC_API = 'https://winoptimizer-theme-sync-api.aceberi86.workers.dev';
+  const SITE_THEME_KEY = 'winoptimizer.siteTheme';
+  const SITE_ACCENT_KEY = 'winoptimizer.siteAccent';
+  const SITE_SESSION_KEY = 'winoptimizer.themeSync.webToken';
+  const siteThemeSelect = document.getElementById('siteThemeSelect');
+  const siteAccentSelect = document.getElementById('siteAccentSelect');
+  const themePairForm = document.getElementById('themePairForm');
+  const themePairCode = document.getElementById('themePairCode');
+  const themePairSubmit = document.getElementById('themePairSubmit');
+  const themeSyncStatus = document.getElementById('themeSyncStatus');
+  const themeSyncConnection = document.getElementById('themeSyncConnection');
+  const themeSyncForget = document.getElementById('themeSyncForget');
+
+  const siteThemes = {
+    dark: { bgWindow:'#1B1C1F', bgSidebar:'#202225', bgCard:'#2A2C31', bgCardHover:'#353840', border:'#3A3D44', borderHover:'#7F8CA3', accent:'#8AAAD8', accentStrong:'#4B6CA3', trackOff:'#3A3D44', textPrimary:'#F2F3F5', textSecondary:'#C2C6CE', textDim:'#A9AEB9', red:'#C0262D', redBright:'#FF5A5F' },
+    light: { bgWindow:'#F3F4F7', bgSidebar:'#FFFFFF', bgCard:'#FFFFFF', bgCardHover:'#EEF1F7', border:'#D8DCE5', borderHover:'#8A94A8', accent:'#2F6FDB', accentStrong:'#2F6FDB', trackOff:'#C9CEDA', textPrimary:'#1B1E24', textSecondary:'#4A5160', textDim:'#666D7E', red:'#C0262D', redBright:'#D13F48' },
+    redblack: { bgWindow:'#120C0C', bgSidebar:'#1A1010', bgCard:'#231516', bgCardHover:'#2F1B1D', border:'#43262A', borderHover:'#A04048', accent:'#FF5A5F', accentStrong:'#C0262D', trackOff:'#43262A', textPrimary:'#F5EDED', textSecondary:'#D0BFBF', textDim:'#B09A9A', red:'#C0262D', redBright:'#FF5A5F' },
+    midnight: { bgWindow:'#0E1422', bgSidebar:'#121A2C', bgCard:'#18223A', bgCardHover:'#1F2C4A', border:'#2A3A5C', borderHover:'#6F8FD0', accent:'#6EA8FF', accentStrong:'#3A66C8', trackOff:'#2A3A5C', textPrimary:'#EEF2FA', textSecondary:'#BCC8DE', textDim:'#9AA8C4', red:'#C0262D', redBright:'#FF5A5F' },
+    emerald: { bgWindow:'#0F1A16', bgSidebar:'#13211C', bgCard:'#1A2B25', bgCardHover:'#223830', border:'#2E4A40', borderHover:'#6FB59A', accent:'#4FD1A1', accentStrong:'#1F8F6A', trackOff:'#2E4A40', textPrimary:'#ECF5F1', textSecondary:'#BBD0C7', textDim:'#98B0A5', red:'#C0262D', redBright:'#FF5A5F' },
+    violet: { bgWindow:'#17121F', bgSidebar:'#1C1626', bgCard:'#261D33', bgCardHover:'#33264A', border:'#43315F', borderHover:'#A184D6', accent:'#B48CFF', accentStrong:'#7B4FD0', trackOff:'#43315F', textPrimary:'#F3EEFA', textSecondary:'#CDC2E0', textDim:'#A99BC4', red:'#C0262D', redBright:'#FF5A5F' },
+    amoled: { bgWindow:'#000000', bgSidebar:'#0A0A0A', bgCard:'#141414', bgCardHover:'#1E1E1E', border:'#2A2A2A', borderHover:'#7A7A7A', accent:'#8AAAD8', accentStrong:'#4B6CA3', trackOff:'#2A2A2A', textPrimary:'#F2F2F2', textSecondary:'#BDBDBD', textDim:'#9E9E9E', red:'#C0262D', redBright:'#FF5A5F' }
+  };
+  const siteAccents = {
+    theme: null,
+    blue: { main:'#6EA8FF', strong:'#3A66C8' },
+    red: { main:'#FF6B6B', strong:'#C0392B' },
+    green: { main:'#4FD1A1', strong:'#1F8F6A' },
+    purple: { main:'#B48CFF', strong:'#7B4FD0' },
+    orange: { main:'#FFA94D', strong:'#C46A12' },
+    pink: { main:'#FF7EB6', strong:'#C23C7E' }
+  };
+
+  let currentSiteTheme = siteThemes.dark ? 'dark' : 'dark';
+  let currentSiteAccent = 'theme';
+  let websiteSessionToken = null;
+  let lastWebsiteThemeUpdatedAt = 0;
+  let themeWriteInProgress = false;
+
+  const showThemeSyncStatus = (message) => {
+    if (themeSyncStatus) themeSyncStatus.textContent = message;
+  };
+  const setThemeConnectionUi = (connected) => {
+    if (themeSyncConnection) {
+      themeSyncConnection.textContent = connected ? 'Приложение привязано к этому браузеру' : 'Не подключено';
+      themeSyncConnection.classList.toggle('connected', connected);
+    }
+    if (themeSyncForget) themeSyncForget.hidden = !connected;
+  };
+  const safeStorageGet = (key) => {
+    try { return localStorage.getItem(key); } catch { return null; }
+  };
+  const safeStorageSet = (key, value) => {
+    try { localStorage.setItem(key, value); return true; } catch { return false; }
+  };
+  const safeStorageRemove = (key) => {
+    try { localStorage.removeItem(key); } catch { /* storage may be disabled */ }
+  };
+  const saveSiteTheme = () => {
+    safeStorageSet(SITE_THEME_KEY, currentSiteTheme);
+    safeStorageSet(SITE_ACCENT_KEY, currentSiteAccent);
+  };
+  const applySiteTheme = (themeId, accentId, persist = true) => {
+    const palette = siteThemes[themeId];
+    if (!palette || !Object.prototype.hasOwnProperty.call(siteAccents, accentId)) return false;
+    const accent = siteAccents[accentId];
+    const primary = accent ? (themeId === 'light' ? accent.strong : accent.main) : palette.accent;
+    const strong = accent ? accent.strong : palette.accentStrong;
+    const variables = {
+      '--bg-window': palette.bgWindow, '--bg-sidebar': palette.bgSidebar,
+      '--bg-card': palette.bgCard, '--bg-card-hover': palette.bgCardHover,
+      '--border': palette.border, '--border-hover': palette.borderHover,
+      '--accent': primary, '--accent-strong': strong, '--track-off': palette.trackOff,
+      '--text-primary': palette.textPrimary, '--text-secondary': palette.textSecondary,
+      '--text-dim': palette.textDim, '--accent-red': palette.red, '--accent-red-bright': palette.redBright
+    };
+    Object.entries(variables).forEach(([name, value]) => document.documentElement.style.setProperty(name, value));
+    const themeColor = document.querySelector('meta[name="theme-color"]');
+    if (themeColor) themeColor.setAttribute('content', palette.bgWindow);
+    currentSiteTheme = themeId;
+    currentSiteAccent = accentId;
+    if (siteThemeSelect) siteThemeSelect.value = themeId;
+    if (siteAccentSelect) siteAccentSelect.value = accentId;
+    if (persist) saveSiteTheme();
+    return true;
+  };
+
+  const themeApiRequest = async (path, { method = 'GET', token = null, body = null } = {}) => {
+    const headers = { Accept: 'application/json' };
+    if (body !== null) headers['Content-Type'] = 'application/json';
+    if (token) headers.Authorization = 'Bearer ' + token;
+    const response = await fetch(THEME_SYNC_API + path, {
+      method, headers, body: body === null ? undefined : JSON.stringify(body), cache: 'no-store'
+    });
+    let payload = {};
+    try { payload = await response.json(); } catch { /* response may be empty */ }
+    if (!response.ok) {
+      const error = new Error(payload.error || ('HTTP ' + response.status));
+      error.status = response.status;
+      throw error;
+    }
+    return payload;
+  };
+  const forgetWebsiteSession = () => {
+    websiteSessionToken = null;
+    safeStorageRemove(SITE_SESSION_KEY);
+    lastWebsiteThemeUpdatedAt = 0;
+    setThemeConnectionUi(false);
+  };
+  const handleExpiredWebsiteSession = (error) => {
+    if (error && error.status === 401) {
+      forgetWebsiteSession();
+      showThemeSyncStatus('Сессия сайта истекла. Создайте новый код в приложении и привяжите его снова.');
+      return true;
+    }
+    return false;
+  };
+  const pushWebsiteTheme = async () => {
+    if (!websiteSessionToken || themeWriteInProgress) return;
+    themeWriteInProgress = true;
+    try {
+      const result = await themeApiRequest('/v1/theme', {
+        method: 'PUT', token: websiteSessionToken,
+        body: { id: currentSiteTheme, accent: currentSiteAccent }
+      });
+      lastWebsiteThemeUpdatedAt = Math.max(lastWebsiteThemeUpdatedAt, Number(result.updatedAt) || 0);
+      showThemeSyncStatus('Тема сайта синхронизирована с приложением.');
+    } catch (error) {
+      if (!handleExpiredWebsiteSession(error))
+        showThemeSyncStatus('Не удалось синхронизировать тему: ' + error.message);
+    } finally {
+      themeWriteInProgress = false;
+    }
+  };
+  const pullWebsiteTheme = async () => {
+    if (!websiteSessionToken || themeWriteInProgress) return;
+    try {
+      const remote = await themeApiRequest('/v1/theme', { token: websiteSessionToken });
+      const updatedAt = Number(remote.updatedAt) || 0;
+      const remoteDiffers = remote.id !== currentSiteTheme || remote.accent !== currentSiteAccent;
+      if (updatedAt >= lastWebsiteThemeUpdatedAt && (updatedAt > lastWebsiteThemeUpdatedAt || remoteDiffers)) {
+        applySiteTheme(remote.id, remote.accent, true);
+        showThemeSyncStatus('Тема обновлена из WinOptimizer.');
+      }
+      lastWebsiteThemeUpdatedAt = Math.max(lastWebsiteThemeUpdatedAt, updatedAt);
+    } catch (error) {
+      if (!handleExpiredWebsiteSession(error))
+        showThemeSyncStatus('Не удалось проверить тему приложения: ' + error.message);
+    }
+  };
+
+  if (siteThemeSelect && siteAccentSelect) {
+    const savedTheme = safeStorageGet(SITE_THEME_KEY);
+    const savedAccent = safeStorageGet(SITE_ACCENT_KEY);
+    applySiteTheme(
+      Object.prototype.hasOwnProperty.call(siteThemes, savedTheme) ? savedTheme : 'dark',
+      Object.prototype.hasOwnProperty.call(siteAccents, savedAccent) ? savedAccent : 'theme',
+      false
+    );
+    siteThemeSelect.addEventListener('change', () => {
+      applySiteTheme(siteThemeSelect.value, currentSiteAccent);
+      void pushWebsiteTheme();
+    });
+    siteAccentSelect.addEventListener('change', () => {
+      applySiteTheme(currentSiteTheme, siteAccentSelect.value);
+      void pushWebsiteTheme();
+    });
+  }
+
+  if (themePairForm && themePairCode) {
+    themePairForm.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const code = themePairCode.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+      if (!/^[A-HJ-NP-Z2-9]{8}$/.test(code)) {
+        showThemeSyncStatus('Проверьте код: он должен состоять из 8 символов.');
+        themePairCode.focus();
+        return;
+      }
+
+      if (themePairSubmit) themePairSubmit.disabled = true;
+      showThemeSyncStatus('Подтверждаем привязку устройства…');
+      try {
+        const result = await themeApiRequest('/v1/pairings/claim', {
+          method: 'POST',
+          body: { code, theme: { id: currentSiteTheme, accent: currentSiteAccent } }
+        });
+        if (!result.webToken) throw new Error('Сервер не вернул веб-токен сессии.');
+        websiteSessionToken = result.webToken;
+        if (!safeStorageSet(SITE_SESSION_KEY, websiteSessionToken)) {
+          showThemeSyncStatus('Привязка выполнена, но браузер запретил сохранение сессии. Не закрывайте вкладку.');
+        } else {
+          showThemeSyncStatus('Устройство привязано. Тема будет синхронизироваться в течение веб-сессии.');
+        }
+        lastWebsiteThemeUpdatedAt = 0;
+        setThemeConnectionUi(true);
+        themePairCode.value = '';
+        await pullWebsiteTheme();
+      } catch (error) {
+        showThemeSyncStatus('Не удалось привязать устройство: ' + error.message);
+      } finally {
+        if (themePairSubmit) themePairSubmit.disabled = false;
+      }
+    });
+  }
+
+  if (themeSyncForget) {
+    themeSyncForget.addEventListener('click', () => {
+      forgetWebsiteSession();
+      showThemeSyncStatus('Сессия удалена из этого браузера. Приложение при этом остаётся привязанным.');
+    });
+  }
+
+  const savedWebToken = safeStorageGet(SITE_SESSION_KEY);
+  if (savedWebToken) {
+    websiteSessionToken = savedWebToken;
+    setThemeConnectionUi(true);
+    showThemeSyncStatus('Проверяем сохранённую связь с приложением…');
+    void pullWebsiteTheme();
+    window.setInterval(() => { void pullWebsiteTheme(); }, 20000);
+  }
+
   const reveals = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver(
