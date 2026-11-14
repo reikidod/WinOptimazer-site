@@ -327,6 +327,15 @@
   const safeStorageRemove = (key) => {
     try { localStorage.removeItem(key); } catch { /* storage may be disabled */ }
   };
+  const safeSessionGet = (key) => {
+    try { return sessionStorage.getItem(key); } catch { return null; }
+  };
+  const safeSessionSet = (key, value) => {
+    try { sessionStorage.setItem(key, value); return true; } catch { return false; }
+  };
+  const safeSessionRemove = (key) => {
+    try { sessionStorage.removeItem(key); } catch { /* session storage may be disabled */ }
+  };
   const saveSiteTheme = () => {
     safeStorageSet(SITE_THEME_KEY, currentSiteTheme);
     safeStorageSet(SITE_ACCENT_KEY, currentSiteAccent);
@@ -374,7 +383,7 @@
   };
   const forgetWebsiteSession = () => {
     websiteSessionToken = null;
-    safeStorageRemove(SITE_SESSION_KEY);
+    safeSessionRemove(SITE_SESSION_KEY);
     lastWebsiteThemeUpdatedAt = 0;
     setThemeConnectionUi(false);
   };
@@ -473,7 +482,7 @@
         });
         if (!result.webToken) throw new Error('Сервер не вернул веб-токен сессии.');
         websiteSessionToken = result.webToken;
-        if (!safeStorageSet(SITE_SESSION_KEY, websiteSessionToken)) {
+        if (!safeSessionSet(SITE_SESSION_KEY, websiteSessionToken)) {
           showThemeSyncStatus('Привязка выполнена, но браузер запретил сохранение сессии. Не закрывайте вкладку.');
         } else {
           showThemeSyncStatus('Устройство привязано. Тема будет синхронизироваться в течение веб-сессии.');
@@ -497,7 +506,7 @@
     });
   }
 
-  const savedWebToken = safeStorageGet(SITE_SESSION_KEY);
+  const savedWebToken = safeSessionGet(SITE_SESSION_KEY);
   if (savedWebToken) {
     websiteSessionToken = savedWebToken;
     setThemeConnectionUi(true);
