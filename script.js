@@ -300,11 +300,13 @@
     pink: { main:'#FF7EB6', strong:'#C23C7E' }
   };
 
-  let currentSiteTheme = siteThemes.dark ? 'dark' : 'dark';
+  let currentSiteTheme = 'dark';
   let currentSiteAccent = 'theme';
   let websiteSessionToken = null;
   let lastWebsiteThemeUpdatedAt = 0;
   let themeWriteInProgress = false;
+  let themeWritePending = false;
+  let localThemeRevision = 0;
 
   const showThemeSyncStatus = (message) => {
     if (themeSyncStatus) themeSyncStatus.textContent = message;
@@ -385,29 +387,43 @@
     return false;
   };
   const pushWebsiteTheme = async () => {
-    if (!websiteSessionToken || themeWriteInProgress) return;
+    if (!websiteSessionToken) return;
+    if (themeWriteInProgress) {
+      themeWritePending = true;
+      return;
+    }
     themeWriteInProgress = true;
     try {
-      const result = await themeApiRequest('/v1/theme', {
-        method: 'PUT', token: websiteSessionToken,
-        body: { id: currentSiteTheme, accent: currentSiteAccent }
-      });
-      lastWebsiteThemeUpdatedAt = Math.max(lastWebsiteThemeUpdatedAt, Number(result.updatedAt) || 0);
+      do {
+        themeWritePending = false;
+        const snapshot = { id: currentSiteTheme, accent: currentSiteAccent };
+        const result = await themeApiRequest('/v1/theme', {
+          method: 'PUT', token: websiteSessionToken, body: snapshot
+        });
+        lastWebsiteThemeUpdatedAt = Math.max(lastWebsiteThemeUpdatedAt, Number(result.updatedAt) || 0);
+      } while (themeWritePending && websiteSessionToken);
       showThemeSyncStatus('Тема сайта синхронизирована с приложением.');
     } catch (error) {
       if (!handleExpiredWebsiteSession(error))
         showThemeSyncStatus('Не удалось синхронизировать тему: ' + error.message);
     } finally {
       themeWriteInProgress = false;
+      if (themeWritePending && websiteSessionToken) {
+        themeWritePending = false;
+        void pushWebsiteTheme();
+      }
     }
   };
   const pullWebsiteTheme = async () => {
     if (!websiteSessionToken || themeWriteInProgress) return;
+    const localRevisionAtStart = localThemeRevision;
     try {
       const remote = await themeApiRequest('/v1/theme', { token: websiteSessionToken });
       const updatedAt = Number(remote.updatedAt) || 0;
       const remoteDiffers = remote.id !== currentSiteTheme || remote.accent !== currentSiteAccent;
-      if (updatedAt >= lastWebsiteThemeUpdatedAt && (updatedAt > lastWebsiteThemeUpdatedAt || remoteDiffers)) {
+      if (localRevisionAtStart === localThemeRevision &&
+          updatedAt >= lastWebsiteThemeUpdatedAt &&
+          (updatedAt > lastWebsiteThemeUpdatedAt || remoteDiffers)) {
         applySiteTheme(remote.id, remote.accent, true);
         showThemeSyncStatus('Тема обновлена из WinOptimizer.');
       }
@@ -427,10 +443,12 @@
       false
     );
     siteThemeSelect.addEventListener('change', () => {
+      localThemeRevision += 1;
       applySiteTheme(siteThemeSelect.value, currentSiteAccent);
       void pushWebsiteTheme();
     });
     siteAccentSelect.addEventListener('change', () => {
+      localThemeRevision += 1;
       applySiteTheme(currentSiteTheme, siteAccentSelect.value);
       void pushWebsiteTheme();
     });
