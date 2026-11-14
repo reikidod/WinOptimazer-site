@@ -12,7 +12,7 @@ The browser creates a random UUID in `sessionStorage`; it is removed when the ta
 
 ## Cloudflare configuration
 
-The Worker uses the existing D1 database `winoptimizer-theme-sync`, binding `DB`, and the allowed origin `https://reikidod.github.io`. No API key or paid Cloudflare feature is required.
+The Worker uses the existing D1 database `winoptimizer-theme-sync`, binding `DB`, and the allowed origins `https://winoptimizer.com`, `https://www.winoptimizer.com` and `https://reikidod.github.io`. No API key or paid Cloudflare feature is required.
 
 After the updated Worker code is deployed, apply the additional migration from the `worker` directory:
 
@@ -28,7 +28,7 @@ The migration adds `site_daily_stats` and `site_daily_sessions`. It does not dro
 - `POST /v1/site/visit` — body: `{ "sessionId": "<uuid>" }`; increments page views and increments sessions only once per tab/day.
 - `GET /v1/site/stats?days=30` — public daily aggregates; accepted range is 1–90 days.
 
-The Worker accepts browser requests only from the configured GitHub Pages origin. Statistics are approximate tab sessions, not people or verified unique visitors.
+The Worker accepts browser requests only from the configured website origins. Statistics are approximate tab sessions, not people or verified unique visitors.
 
 ## Local checks
 

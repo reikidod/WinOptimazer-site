@@ -1,5 +1,5 @@
 (() => {
-  const API = "https://winoptimizer-theme-sync-api.aceberi86.workers.dev";
+  const API = "https://api.winoptimizer.com";
   const SESSION_KEY = "winoptimizer.siteStats.tabSession.v1";
   const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
