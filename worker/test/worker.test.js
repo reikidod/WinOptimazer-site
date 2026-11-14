@@ -40,9 +40,9 @@ class FakeD1 {
         }
 
         if (sql.startsWith("INSERT INTO site_daily_stats")) {
-          const [day, views, sessions] = values;
+          const [day, sessions] = values;
           const row = database.stats.get(day) || { day, views: 0, sessions: 0 };
-          row.views += Number(views);
+          row.views += 1;
           row.sessions += Number(sessions);
           database.stats.set(day, row);
           return { meta: { changes: 1 } };
