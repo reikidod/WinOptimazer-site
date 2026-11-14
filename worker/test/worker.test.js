@@ -9,7 +9,7 @@ test("health endpoint reports service availability", async () => {
   assert.equal(response.status, 200);
   assert.deepEqual(await response.json(), {
     status: "ok",
-    service: "winoptimizer-theme-sync"
+    service: "winoptimizer-theme-sync-api"
   });
 });
 
