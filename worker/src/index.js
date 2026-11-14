@@ -88,7 +88,7 @@ async function handle(request, env) {
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(request, env) });
 
   if (request.method === "GET" && path === "/health")
-    return json({ status: "ok", service: "winoptimizer-theme-sync" });
+    return json({ status: "ok", service: "winoptimizer-theme-sync-api" });
 
   if (request.method === "POST" && path === "/v1/pairings") {
     if (await rateLimited(request, env, "pairing-start", 10, 60)) return fail("Too many pairing requests", 429);
