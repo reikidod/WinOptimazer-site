@@ -491,6 +491,75 @@
         </div>
       </div>
     </section>
+
+    <section id="theme-sync" class="section theme-sync-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Персонализация</p>
+          <h2 class="section-title">Тема сайта и WinOptimizer</h2>
+          <p class="section-sub">Выберите оформление сайта или свяжите его с приложением. После привязки изменение темы на одной стороне будет передаваться на другую.</p>
+        </div>
+        <div class="theme-sync-panel reveal">
+          <div class="theme-sync-intro">
+            <div>
+              <span class="theme-sync-eyebrow">Персональная синхронизация</span>
+              <h3>Один стиль на всех устройствах</h3>
+              <p>Новые посетители начинают с текущей темы сайта. Персональные настройки загружаются только после привязки приложения.</p>
+            </div>
+            <p id="themeSyncStatus" class="theme-sync-status" role="status" aria-live="polite">Сайт использует стандартную тему. Привязка не выполнена.</p>
+          </div>
+
+          <div class="theme-sync-controls">
+            <label class="theme-sync-field">
+              <span>Тема сайта</span>
+              <select id="siteThemeSelect">
+                <option value="dark">Тёмная</option>
+                <option value="light">Светлая</option>
+                <option value="redblack">Красно-чёрная</option>
+                <option value="midnight">Ночной синий</option>
+                <option value="emerald">Изумрудная</option>
+                <option value="violet">Фиолетовая</option>
+                <option value="amoled">AMOLED (чёрная)</option>
+              </select>
+            </label>
+            <label class="theme-sync-field">
+              <span>Акцентный цвет</span>
+              <select id="siteAccentSelect">
+                <option value="theme">Как в теме</option>
+                <option value="blue">Синий</option>
+                <option value="red">Красный</option>
+                <option value="green">Зелёный</option>
+                <option value="purple">Фиолетовый</option>
+                <option value="orange">Оранжевый</option>
+                <option value="pink">Розовый</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="theme-sync-divider"></div>
+          <div class="theme-sync-pairing">
+            <div>
+              <h3>Привязать приложение</h3>
+              <p>В WinOptimizer откройте «Настройки» → «Тема и цвета» → «Создать код привязки». Введите показанный код здесь.</p>
+            </div>
+            <form id="themePairForm" class="theme-sync-pair-form">
+              <label class="theme-sync-field" for="themePairCode">
+                <span>Одноразовый код из приложения</span>
+                <input id="themePairCode" name="code" type="text" inputmode="text" autocomplete="one-time-code"
+                       autocapitalize="characters" spellcheck="false" maxlength="8" pattern="[A-HJ-NP-Z2-9]{8}"
+                       placeholder="Например, 7K4M2P9Q" required>
+              </label>
+              <button class="btn btn-accent" type="submit" id="themePairSubmit">Связать приложение</button>
+            </form>
+          </div>
+          <div class="theme-sync-footer">
+            <span id="themeSyncConnection" class="theme-sync-connection">Не подключено</span>
+            <button type="button" class="btn btn-ghost btn-sm" id="themeSyncForget" hidden>Забыть этот браузер</button>
+          </div>
+          <p class="theme-sync-note">Код действует 10 минут и принимается один раз. Веб-сессия хранится в этом браузере до 12 часов. Для защиты доступа не передавайте код другим людям.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
