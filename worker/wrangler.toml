@@ -5,8 +5,8 @@ workers_dev = true
 
 [vars]
 ALLOWED_ORIGINS = "https://reikidod.github.io"
-THEME_IDS = "dark,light,midnight,emerald"
-ACCENT_IDS = "blue"
+THEME_IDS = "dark,light,redblack,midnight,emerald,violet,amoled"
+ACCENT_IDS = "theme,blue,red,green,purple,orange,pink"
 
 [[d1_databases]]
 binding = "DB"
