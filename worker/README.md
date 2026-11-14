@@ -13,7 +13,7 @@ This Worker stores only device identity, a validated theme ID/accent ID, and has
 
 The device UUID is an identifier, not an authentication secret. Pairing codes are stored as SHA-256 hashes. Device tokens are stored as SHA-256 hashes; the one-time delivery copy is encrypted with AES-GCM and a Cloudflare secret, then erased when polled. Browser sessions are stored as hashes and expire after 12 hours.
 
-The website's default appearance remains unchanged until a browser session is explicitly linked. The website must keep the browser token in session-scoped storage only; do not put it in a URL, cookie readable by unrelated scripts, analytics, or logs. Device tokens must be stored by the Windows app using Windows DPAPI (CurrentUser scope).
+The website's default appearance remains unchanged until a browser session is explicitly linked. The website keeps its 12-hour browser bearer token in tab-scoped `sessionStorage`; the token is not placed in a URL, analytics, or logs. The selected display theme may be remembered separately in `localStorage`. The WPF app stores its device token as a generic credential in Windows Credential Manager for the current Windows user; it is never written to `settings.json`.
 
 ## Configure Cloudflare
 
@@ -38,7 +38,7 @@ Provide a cryptographically random secret of at least 32 characters (for example
 npx wrangler deploy
 ```
 
-Set the resulting Worker URL in the website's sync client configuration. Do not enable production UI until the Worker health check and pairing integration tests pass.
+The website and WPF app currently use `https://winoptimizer-theme-sync-api.aceberi86.workers.dev`. Before treating a deployment as fully accepted, complete a real end-to-end pairing test: generate a code in the app, claim it on the website, then change the theme on each side and verify the other side receives the change. Health checks and unit tests alone do not prove pairing works.
 
 ## API
 
@@ -50,7 +50,7 @@ Set the resulting Worker URL in the website's sync client configuration. Do not 
 - `PUT /v1/theme` — bearer-authenticated body: `{ "id": "midnight", "accent": "purple" }`.
 - `POST /v1/device/revoke` — device-token-only revocation.
 
-The initial allowlist contains only the four theme IDs already confirmed in the WPF application: `dark`, `light`, `midnight`, `emerald`. The initial accent allowlist is `blue` until the complete accent identifiers are verified against the application. Extend `THEME_IDS` and `ACCENT_IDS` in `wrangler.toml` only with identifiers that exist in the app.
+The allowlists are aligned with the WPF `ThemeManager`: theme IDs are `dark`, `light`, `redblack`, `midnight`, `emerald`, `violet`, `amoled`; accent IDs are `theme`, `blue`, `red`, `green`, `purple`, `orange`, `pink`. Keep these values synchronized with the application when adding or removing a theme.
 
 ## Local checks
 
