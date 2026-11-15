@@ -9,9 +9,9 @@
   --accent-strong: #0078D4;
   --accent-red: #0078D4;
   --accent-red-bright: #00B4F4;
-  --text-primary: #F2F3F5;
-  --text-secondary: #C2C6CE;
-  --text-dim: #A9AEB9;
+  --text-primary: #1E293B;
+  --text-secondary: #475569;
+  --text-dim: #64748B;
   --radius: 14px;
   --radius-sm: 10px;
   --shadow: 0 12px 40px rgba(31,101,155,0.13);
@@ -975,7 +975,7 @@ body {
 
 /* Live development roadmap */
 .roadmap-section { background: linear-gradient(180deg, rgba(0,120,212,0.045), transparent 75%); }
-.roadmap-source { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:14px 18px; margin-bottom:18px; border:1px solid var(--border); border-radius:var(--radius-sm); background:rgba(32,34,37,0.72); color:var(--text-secondary); font-size:.84rem; }
+.roadmap-source { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; padding:14px 18px; margin-bottom:18px; border:1px solid var(--border); border-radius:var(--radius-sm); background:rgba(255,255,255,0.82); color:var(--text-secondary); font-size:.84rem; }
 .roadmap-source-indicator { display:flex; align-items:center; gap:9px; }
 .roadmap-live-dot { width:8px; height:8px; border-radius:50%; background:#7FB38F; box-shadow:0 0 10px rgba(127,179,143,.45); }
 .roadmap-source a { color:var(--accent); text-decoration:none; font-weight:600; }
@@ -1567,6 +1567,7 @@ html,body,.header,.feature-card,.safety-item,.download-card,.req-table,.faq-item
 :root[data-theme="dark"] .roadmap-stage { background:#1B2C42; border-color:#2B4560; }
 :root[data-theme="dark"] .roadmap-stage summary { color:#ECF5FF; }
 :root[data-theme="dark"] .roadmap-stage-meta,:root[data-theme="dark"] .roadmap-task-text { color:#B7C9DC; }
+:root[data-theme="dark"] .roadmap-source { background:rgba(27,44,66,.86); border-color:#2B4560; color:#B7C9DC; }
 :root[data-theme="dark"] .site-stats-bar-track { background:#132238; }
 :root[data-theme="dark"] .comparison-table th,:root[data-theme="dark"] .comparison-table td { border-bottom-color:#2B4560; }
 :root[data-theme="dark"] .comparison-table thead th { background:rgba(0,180,244,.12); color:#EAF5FF; }
