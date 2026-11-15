@@ -1574,3 +1574,42 @@ html,body,.header,.feature-card,.safety-item,.download-card,.req-table,.faq-item
 :root[data-theme="dark"] .comparison-table td { color:#B7C9DC; }
 :root[data-theme="dark"] ::selection { background:rgba(0,180,244,.3); color:#fff; }
 :root[data-theme="dark"] :focus-visible { outline-color:rgba(0,180,244,.7); }
+
+
+/* Getting started: keep the step guide readable in both color themes. */
+.guide-steps {
+  background: linear-gradient(115deg, #EAF5FF 0%, #FFFFFF 62%);
+  color: #203247;
+}
+.guide-steps-head h3,
+.guide-steps .steps-list strong {
+  color: #172B43;
+}
+.guide-steps-head > p:last-child,
+.guide-steps .steps-list p {
+  color: #53677F;
+}
+.guide-steps .step-number {
+  color: #006FB9;
+  background: #F4FAFF;
+  border-color: #B8DDF4;
+}
+
+:root[data-theme="dark"] .guide-steps {
+  background: linear-gradient(115deg, #17263A 0%, #1B2C42 62%);
+  color: var(--text-primary);
+  border-color: var(--border);
+}
+:root[data-theme="dark"] .guide-steps-head h3,
+:root[data-theme="dark"] .guide-steps .steps-list strong {
+  color: var(--text-primary);
+}
+:root[data-theme="dark"] .guide-steps-head > p:last-child,
+:root[data-theme="dark"] .guide-steps .steps-list p {
+  color: var(--text-secondary);
+}
+:root[data-theme="dark"] .guide-steps .step-number {
+  color: #8FD8FF;
+  background: #20364E;
+  border-color: #365B7B;
+}
