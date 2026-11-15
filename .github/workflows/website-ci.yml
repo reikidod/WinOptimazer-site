@@ -65,7 +65,10 @@ jobs:
           grep -Eiq '</html>[[:space:]]*$' index.html
           # Allow cache-busting query strings and fragments on the stylesheet URL.
           grep -Eiq 'href="styles\.css([?#][^"]*)?"' index.html
-          echo "HTML smoke checks passed."
+          grep -Fq -- "--text-primary: #1E293B;" styles.css
+          grep -Fq -- "--text-secondary: #475569;" styles.css
+          grep -Fq -- "--text-dim: #64748B;" styles.css
+          echo "HTML and light-theme contrast token checks passed."
 
       - name: Test site statistics Worker
         working-directory: worker
