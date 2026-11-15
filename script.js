@@ -1,4 +1,27 @@
 (function () {
+  // Persistent light/dark appearance preference.
+  const themeToggle = document.getElementById('themeToggle');
+  const themeLabel = themeToggle?.querySelector('.theme-toggle-label');
+  const themeIcon = themeToggle?.querySelector('.theme-toggle-icon');
+  const applyTheme = (theme) => {
+    const dark = theme === 'dark';
+    document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+    themeToggle?.setAttribute('aria-pressed', String(dark));
+    themeToggle?.setAttribute('aria-label', dark ? 'Включить светлую тему' : 'Включить тёмную тему');
+    themeToggle?.setAttribute('title', dark ? 'Включить светлую тему' : 'Включить тёмную тему');
+    if (themeLabel) themeLabel.textContent = dark ? 'Светлая тема' : 'Тёмная тема';
+    if (themeIcon) themeIcon.textContent = dark ? '☀' : '☾';
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#101B2B' : '#F6FAFF');
+  };
+  let savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('winoptimizer-site-theme') || 'light'; } catch {}
+  applyTheme(savedTheme);
+  themeToggle?.addEventListener('click', () => {
+    const nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    try { localStorage.setItem('winoptimizer-site-theme', nextTheme); } catch {}
+  });
+
   const header = document.getElementById('header');
   const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('nav');
