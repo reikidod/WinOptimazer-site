@@ -81,11 +81,100 @@ async function getTheme(env, deviceId) {
   ).bind(deviceId).first();
   return row ? { id: row.theme_id, accent: row.accent_id, updatedAt: row.updated_at } : null;
 }
+
+function validSessionId(value) {
+  return typeof value === "string" &&
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+}
+function todayUtc() { return new Date().toISOString().slice(0, 10); }
+function dayOffset(day, offset) {
+  const date = new Date(day + "T00:00:00.000Z");
+  date.setUTCDate(date.getUTCDate() + offset);
+  return date.toISOString().slice(0, 10);
+}
+async function hashSession(day, sessionId) {
+  return await hash(day + ":" + sessionId);
+}
+async function recordSiteVisit(request, env) {
+  if (await rateLimited(request, env, "site-visit", 60, 60)) return fail("Too many requests", 429);
+  let input;
+  try { input = await body(request); } catch { return fail("Invalid JSON body"); }
+  if (!validSessionId(input.sessionId)) return fail("A valid tab sessionId is required");
+  const day = todayUtc();
+  const sessionHash = await hashSession(day, input.sessionId);
+  await env.DB.prepare("DELETE FROM site_daily_sessions WHERE day < ?").bind(day).run();
+  const inserted = await env.DB.prepare(
+    "INSERT OR IGNORE INTO site_daily_sessions (day, session_hash) VALUES (?, ?)"
+  ).bind(day, sessionHash).run();
+  const isNewSession = Number(inserted.meta?.changes || 0) > 0;
+  await env.DB.prepare(
+    "INSERT INTO site_daily_stats (day, views, sessions) VALUES (?, 1, ?) " +
+    "ON CONFLICT(day) DO UPDATE SET views = site_daily_stats.views + 1, " +
+    "sessions = site_daily_stats.sessions + excluded.sessions"
+  ).bind(day, isNewSession ? 1 : 0).run();
+  return json({ accepted: true, day }, 202);
+}
+async function recordSiteHeartbeat(request, env) {
+  if (await rateLimited(request, env, "site-heartbeat", 90, 60)) return fail("Too many requests", 429);
+  let input;
+  try { input = await body(request); } catch { return fail("Invalid JSON body"); }
+  if (!validSessionId(input.sessionId)) return fail("A valid tab sessionId is required");
+  const sessionHash = await hashSession("active", input.sessionId);
+  const now = Date.now();
+  await env.DB.prepare("DELETE FROM site_active_sessions WHERE last_seen < ?").bind(now - 180000).run();
+  await env.DB.prepare(
+    "INSERT INTO site_active_sessions (session_hash, last_seen) VALUES (?, ?) " +
+    "ON CONFLICT(session_hash) DO UPDATE SET last_seen = excluded.last_seen"
+  ).bind(sessionHash, now).run();
+  return json({ accepted: true, activeWindowSeconds: 120 }, 202);
+}
+async function readSiteStatistics(url, env) {
+  const requested = Number(url.searchParams.get("days") || 30);
+  const days = Number.isFinite(requested) ? Math.max(1, Math.min(90, Math.trunc(requested))) : 30;
+  const today = todayUtc();
+  const start = dayOffset(today, -(days - 1));
+  const result = await env.DB.prepare(
+    "SELECT day, views, sessions FROM site_daily_stats WHERE day >= ? ORDER BY day ASC"
+  ).bind(start).all();
+  const byDay = new Map((result.results || []).map(row => [
+    row.day, { day: row.day, views: Number(row.views) || 0, sessions: Number(row.sessions) || 0 }
+  ]));
+  const daily = Array.from({ length: days }, (_, i) => {
+    const day = dayOffset(start, i);
+    return byDay.get(day) || { day, views: 0, sessions: 0 };
+  });
+  const onlineRow = await env.DB.prepare(
+    "SELECT COUNT(*) AS online FROM site_active_sessions WHERE last_seen >= ?"
+  ).bind(Date.now() - 120000).first();
+  return json({
+    days, online: Number(onlineRow?.online) || 0,
+    today: byDay.get(today) || { day: today, views: 0, sessions: 0 },
+    totals: {
+      views: daily.reduce((sum, row) => sum + row.views, 0),
+      sessions: daily.reduce((sum, row) => sum + row.sessions, 0)
+    },
+    daily
+  });
+}
+
 async function handle(request, env) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\/+$/, "") || "/";
   if (!originAllowed(request, env)) return fail("Origin not allowed", 403);
   if (request.method === "OPTIONS") return new Response(null, { status: 204, headers: cors(request, env) });
+
+  if (request.method === "POST" && path === "/v1/site/visit") {
+    if (!env.DB) return fail("Statistics database is not configured", 503);
+    return recordSiteVisit(request, env);
+  }
+  if (request.method === "POST" && path === "/v1/site/heartbeat") {
+    if (!env.DB) return fail("Statistics database is not configured", 503);
+    return recordSiteHeartbeat(request, env);
+  }
+  if (request.method === "GET" && path === "/v1/site/stats") {
+    if (!env.DB) return fail("Statistics database is not configured", 503);
+    return readSiteStatistics(url, env);
+  }
 
   if (request.method === "GET" && path === "/health")
     return json({ status: "ok", service: "winoptimizer-theme-sync" });
