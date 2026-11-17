@@ -116,6 +116,7 @@
 
     const data = await response.json();
     setText("siteStatsOnline", numberFormat.format(data.online || 0));
+    setText("siteStatsOnline", numberFormat.format(data.online || 0));
     setText("siteStatsViewsToday", numberFormat.format(data.today?.views || 0));
     setText("siteStatsSessionsToday", numberFormat.format(data.today?.sessions || 0));
     setText("siteStatsViews30", numberFormat.format(data.totals?.views || 0));
