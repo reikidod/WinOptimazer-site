@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20261115-cyan-2" />
+  <link rel="stylesheet" href="styles.css?v=20261118-control-room" />
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>
@@ -23,7 +23,7 @@
   <header class="header" id="header">
     <div class="container header-inner">
       <a href="#" class="logo">
-        <span class="logo-mark" aria-hidden="true">W</span>
+        <img class="logo-mark" src="assets/winoptimizer-mark.svg" alt="" width="36" height="36" />
         <span class="logo-text">WinOptimizer</span>
       </a>
       <nav class="nav" id="nav" aria-label="Основная навигация">
@@ -130,7 +130,7 @@
         </div>
 
         <div class="intro-panel reveal">
-          <div class="intro-mark" aria-hidden="true">W</div>
+          <img class="intro-mark" src="assets/winoptimizer-mark.svg" alt="" width="52" height="52" />
           <div>
             <h3>Что такое WinOptimizer?</h3>
             <p>Это единый центр управления Windows 10 и 11. Вместо нескольких отдельных утилит вы получаете инструменты для настройки системы, обслуживания компьютера, управления программами и подготовки Windows к играм.</p>
@@ -257,7 +257,32 @@
       </div>
     </section>
 
-    <section id="roadmap" class="section roadmap-section">
+    
+    <section id="community-stats" class="section site-stats-section">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="section-eyebrow">Сообщество WinOptimizer</p>
+          <h2 class="section-title">Проект в цифрах</h2>
+          <p class="section-sub">Публичная статистика посещаемости. Учитываются просмотры и анонимные сессии вкладок; это не число подтверждённых людей.</p>
+        </div>
+        <div class="site-stats-panel reveal" aria-live="polite">
+          <div class="site-stats-heading">
+            <div><span class="site-stats-kicker">LIVE ANALYTICS</span><h3>Посещаемость сайта</h3></div>
+            <span class="site-stats-live"><i></i> Сбор данных</span>
+          </div>
+          <div class="site-stats-metrics">
+            <article><span>Просмотров сегодня</span><strong id="siteStatsViewsToday">—</strong></article>
+            <article><span>Сессий сегодня</span><strong id="siteStatsSessionsToday">—</strong></article>
+            <article><span>Просмотров за 30 дней</span><strong id="siteStatsViews30">—</strong></article>
+            <article><span>Сессий за 30 дней</span><strong id="siteStatsSessions30">—</strong></article>
+          </div>
+          <div class="site-stats-chart-wrap"><div class="site-stats-chart-title"><strong>Динамика за 7 дней</strong><span id="siteStatsUpdated">Ожидание данных</span></div><div id="siteStatsChart" class="site-stats-chart" aria-label="График просмотров за последние семь дней"></div></div>
+          <p id="siteStatsStatus" class="site-stats-status">Подключение к сервису статистики…</p>
+        </div>
+      </div>
+    </section>
+
+<section id="roadmap" class="section roadmap-section">
       <div class="container">
         <div class="section-head reveal">
           <p class="section-eyebrow">Разработка WinOptimizer</p>
@@ -496,7 +521,7 @@
   <footer class="footer">
     <div class="container footer-inner">
       <div class="footer-brand">
-        <span class="logo-mark small"></span>
+        <img class="logo-mark small" src="assets/winoptimizer-mark.svg" alt="" width="28" height="28" />
         <span>WinOptimizer</span>
       </div>
       <div class="footer-links">
@@ -510,5 +535,6 @@
   </footer>
 
   <script src="script.js?v=20261114-6"></script>
+  <script src="site-stats.js?v=20261118-brand-refresh" defer></script>
 </body>
 </html>
