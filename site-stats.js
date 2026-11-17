@@ -128,13 +128,26 @@
     setText("siteStatsStatus", "Счётчик работает. Значения обновляются при посещении страниц сайта.");
   };
 
+  const loadReleaseDownloads = async () => {
+    const response = await fetch("https://api.github.com/repos/reikidod/WinOptimazer/releases?per_page=100", {
+      headers: { Accept: "application/vnd.github+json" }, cache: "no-store"
+    });
+    if (!response.ok) throw new Error("GitHub Releases API: " + response.status);
+    const releases = await response.json();
+    const total = releases.reduce((sum, release) =>
+      sum + (release.assets || []).reduce((assetSum, asset) => assetSum + (Number(asset.download_count) || 0), 0), 0);
+    setText("siteStatsDownloads", numberFormat.format(total));
+  };
+
   const initialize = async () => {
     try {
       await trackPageView();
       await sendHeartbeat();
       window.setInterval(sendHeartbeat, 45000);
-      if (document.getElementById("siteStatsChart"))
+      if (document.getElementById("siteStatsChart")) {
         await loadStatistics();
+        await loadReleaseDownloads().catch(() => setText("siteStatsDownloads", "—"));
+      }
     } catch (error) {
       setText("siteStatsStatus", "Статистика временно недоступна. Данные сайта не затронуты; попробуйте обновить страницу позже.");
       const chart = document.getElementById("siteStatsChart");
