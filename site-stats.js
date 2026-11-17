@@ -144,22 +144,22 @@
       await trackPageView();
       await sendHeartbeat();
       window.setInterval(sendHeartbeat, 45000);
-      if (document.getElementById("siteStatsChart")) {
-        await loadStatistics();
-        await loadReleaseDownloads().catch(() => setText("siteStatsDownloads", "—"));
-      }
+      if (document.getElementById("siteStatsChart")) await loadStatistics();
     } catch (error) {
-      setText("siteStatsStatus", "Статистика временно недоступна. Данные сайта не затронуты; попробуйте обновить страницу позже.");
+      setText("siteStatsStatus", "Статистика посещаемости временно недоступна. Основные функции сайта продолжают работать.");
       const chart = document.getElementById("siteStatsChart");
       if (chart) {
         chart.replaceChildren();
         const message = document.createElement("p");
         message.className = "site-stats-loading";
-        message.textContent = "Не удалось загрузить статистику.";
+        message.textContent = "Нет соединения с сервисом аналитики.";
         chart.append(message);
       }
-      // The counter is non-critical: a stats outage must never affect navigation or page content.
     }
+
+    // Release download counts come directly from GitHub and remain available even if analytics is offline.
+    if (document.getElementById("siteStatsDownloads"))
+      await loadReleaseDownloads().catch(() => setText("siteStatsDownloads", "—"));
   };
 
   void initialize();
