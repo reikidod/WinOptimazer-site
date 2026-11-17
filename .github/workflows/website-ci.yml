@@ -12,7 +12,7 @@ on:
       - "worker/**"
       - ".github/workflows/**"
   pull_request:
-    branches: [main]
+    branches: [main, beta]
     paths:
       - "index.html"
       - "styles.css"
