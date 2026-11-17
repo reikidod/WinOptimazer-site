@@ -173,6 +173,8 @@ async function handle(request, env) {
   }
   if (request.method === "GET" && path === "/v1/site/stats") {
     if (!env.DB) return fail("Statistics database is not configured", 503);
+    if (await rateLimited(request, env, "site-stats", 120, 60))
+      return fail("Too many requests", 429);
     return readSiteStatistics(url, env);
   }
 
