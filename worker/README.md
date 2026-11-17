@@ -59,3 +59,16 @@ npm test
 ```
 
 The test suite uses Node's built-in test runner and requires no third-party runtime dependencies.
+
+
+## Public website statistics
+
+The same Worker also serves privacy-conscious site analytics. It does not replace or alter the theme-pairing endpoints above.
+
+- `POST /v1/site/visit` — one page view and at most one tab session per UTC day.
+- `POST /v1/site/heartbeat` — refreshes the short-lived online-tab record.
+- `GET /v1/site/stats?days=30` — daily views/sessions and currently active tabs (1–90 days).
+
+The browser keeps a random tab UUID in sessionStorage. The Worker stores only SHA-256 hashes, deletes old daily session hashes and expires active-tab records after three minutes. The online value uses a two-minute activity window and represents active tabs, not verified unique people. IP addresses, user agents, page URLs, device IDs and account details are not written to analytics tables.
+
+Apply migrations 0002 and 0003 to the existing D1 database before enabling the public statistics panel. The analytics UI degrades gracefully if the Worker or database is unavailable.
