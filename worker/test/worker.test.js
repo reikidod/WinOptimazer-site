@@ -48,12 +48,19 @@ test("unknown routes return 404", async () => {
 
 
 class StatsD1 {
-  constructor() { this.sessions = new Set(); this.stats = new Map(); this.active = new Map(); }
+  constructor() { this.sessions = new Set(); this.stats = new Map(); this.active = new Map(); this.limits = new Map(); }
   prepare(sql) {
     const db = this; let values = [];
     return {
       bind(...args) { values = args; return this; },
       async run() {
+        if (sql.startsWith("INSERT INTO rate_limits")) {
+          const [key, now, cutoff, cutoffAgain, nowAgain] = values;
+          const old = db.limits.get(key);
+          const count = !old || old.window_start <= cutoff ? 1 : old.request_count + 1;
+          db.limits.set(key, { window_start: !old || old.window_start <= cutoffAgain ? nowAgain : old.window_start, request_count: count });
+          return { meta: { changes: 1 } };
+        }
         if (sql.startsWith("DELETE FROM site_daily_sessions")) {
           const [day] = values; for (const key of [...db.sessions]) if (key.split("|")[0] < day) db.sessions.delete(key);
           return { meta: { changes: 0 } };
@@ -84,6 +91,9 @@ class StatsD1 {
         throw new Error("Unexpected SQL: " + sql);
       },
       async first() {
+        if (sql.startsWith("SELECT request_count FROM rate_limits")) {
+          return db.limits.get(values[0]) || { request_count: 0 };
+        }
         if (sql.startsWith("SELECT COUNT(*) AS online FROM site_active_sessions")) {
           const [cutoff] = values; return { online: [...db.active.values()].filter(time => time >= cutoff).length };
         }
