@@ -1736,3 +1736,5 @@ footer a:hover,.footer a:hover { color:var(--accent); }
 @media (prefers-reduced-motion: reduce) {
   *,*::before,*::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
 }
+
+.site-stats-privacy { margin-top:10px; color:#71848E; font-size:.72rem; line-height:1.65; max-width:900px; }
